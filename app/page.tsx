@@ -6,12 +6,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createRoom } from "./api/rooms";
-import { saveUsername } from "./api/user";
+import { getUsername, saveUsername } from "./api/user";
 
 export default function Home() {
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(getUsername() || "");
 
   const createRoomForm = useForm({
     initialValues: {
