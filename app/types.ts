@@ -7,6 +7,11 @@ export interface Room {
   id: string;
   videoUrl: string;
   owner: string;
-  users: string;
+  users: User[];
   createdAt?: string;
+}
+
+export interface User {
+  socketId: string;
+  username: string;
 }
