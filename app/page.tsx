@@ -1,5 +1,5 @@
 'use client';
-import { createRoom, isUsernameAvailable } from '@/api/rooms';
+import { createRoom, getRoom, isUsernameAvailable } from '@/api/rooms';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowRight, IconPlus } from '@tabler/icons-react';
@@ -51,11 +51,16 @@ export default function Home() {
     },
   });
 
-  const isUsernameAvailableHandler = async (): Promise<boolean> => {
+  const isUsernameAvailableHandler = async (): Promise<boolean | undefined> => {
     const roomId = existingRoomForm.values.existingRoomUrl
       .trim()
       .split('/')
       .pop() as string;
+
+    const roomExists = await isRoomExistsHandler();
+    if (!roomExists) {
+      return;
+    }
 
     const response = await isUsernameAvailable({
       roomId,
@@ -65,11 +70,26 @@ export default function Home() {
     return response.isAvailable;
   };
 
+  const isRoomExistsHandler = async (): Promise<boolean> => {
+    const roomId = existingRoomForm.values.existingRoomUrl
+      .trim()
+      .split('/')
+      .pop() as string;
+
+    try {
+      const response = await getRoom(roomId);
+      return !!response;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     existingRoomForm.values.existingRoomUrl &&
       username &&
       isUsernameAvailableHandler().then((isAvailable) => {
-        if (!isAvailable) {
+        if (isAvailable === false) {
           existingRoomForm.setFieldError(
             'username',
             'Username is already taken in this room',
@@ -79,9 +99,21 @@ export default function Home() {
         }
       });
 
+    existingRoomForm.values.existingRoomUrl &&
+      isRoomExistsHandler().then((isExists) => {
+        if (!isExists) {
+          existingRoomForm.setFieldError(
+            'existingRoomUrl',
+            'Room does not exist',
+          );
+        } else {
+          existingRoomForm.setFieldError('existingRoomUrl', '');
+        }
+      });
+
     createRoomForm.setFieldValue('username', username);
     existingRoomForm.setFieldValue('username', username);
-  }, [username]);
+  }, [username, existingRoomForm.values.existingRoomUrl]);
 
   const createRoomMutation = useMutation({
     mutationFn: () =>
@@ -190,8 +222,11 @@ export default function Home() {
               placeholder="Link to existing room"
               classNames={{
                 root: 'w-full sm:w-1/2',
-                input:
-                  '!bg-transparent text-white border-white border-1 rounded-md',
+                input: `!bg-transparent border-1 rounded-md ${
+                  existingRoomForm.errors.existingRoomUrl
+                    ? 'border-red-500 text-red-500'
+                    : 'border-white text-white'
+                }`,
               }}
               {...existingRoomForm.getInputProps('existingRoomUrl')}
             />
@@ -206,7 +241,7 @@ export default function Home() {
                 !existingRoomForm.values.username
               }
               classNames={{
-                root: 'w-full sm:w-auto rounded-md',
+                root: 'w-full sm:w-auto rounded-md self-start',
                 label: 'flex gap-1 items-center justify-center',
               }}
             >
