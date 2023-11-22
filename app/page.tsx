@@ -1,5 +1,9 @@
 'use client';
-import { createRoom, getRoom, isUsernameAvailable } from '@/api/rooms';
+import {
+  createRoom,
+  isRoomExistsHandler,
+  isUsernameAvailableHandler,
+} from '@/api/rooms';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowRight, IconPlus } from '@tabler/icons-react';
@@ -51,44 +55,15 @@ export default function Home() {
     },
   });
 
-  const isUsernameAvailableHandler = async (): Promise<boolean | undefined> => {
-    const roomId = existingRoomForm.values.existingRoomUrl
-      .trim()
-      .split('/')
-      .pop() as string;
-
-    const roomExists = await isRoomExistsHandler();
-    if (!roomExists) {
-      return;
-    }
-
-    const response = await isUsernameAvailable({
-      roomId,
-      username: username,
-    });
-
-    return response.isAvailable;
-  };
-
-  const isRoomExistsHandler = async (): Promise<boolean> => {
-    const roomId = existingRoomForm.values.existingRoomUrl
-      .trim()
-      .split('/')
-      .pop() as string;
-
-    try {
-      const response = await getRoom(roomId);
-      return !!response;
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  };
-
   useEffect(() => {
+    const roomId = existingRoomForm.values.existingRoomUrl
+      .trim()
+      .split('/')
+      .pop() as string;
+
     existingRoomForm.values.existingRoomUrl &&
       username &&
-      isUsernameAvailableHandler().then((isAvailable) => {
+      isUsernameAvailableHandler({ roomId, username }).then((isAvailable) => {
         if (isAvailable === false) {
           existingRoomForm.setFieldError(
             'username',
@@ -100,7 +75,7 @@ export default function Home() {
       });
 
     existingRoomForm.values.existingRoomUrl &&
-      isRoomExistsHandler().then((isExists) => {
+      isRoomExistsHandler(roomId).then((isExists) => {
         if (!isExists) {
           existingRoomForm.setFieldError(
             'existingRoomUrl',

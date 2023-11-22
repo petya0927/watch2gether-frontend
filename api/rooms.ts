@@ -47,3 +47,33 @@ export const isUsernameAvailable = async ({
     throw error;
   }
 };
+
+export const isUsernameAvailableHandler = async ({
+  roomId,
+  username,
+}: {
+  roomId: string;
+  username: string;
+}): Promise<boolean | undefined> => {
+  const roomExists = await isRoomExistsHandler(roomId);
+  if (!roomExists) {
+    return;
+  }
+
+  const response = await isUsernameAvailable({
+    roomId,
+    username: username,
+  });
+
+  return response.isAvailable;
+};
+
+export const isRoomExistsHandler = async (roomId: string): Promise<boolean> => {
+  try {
+    const response = await getRoom(roomId);
+    return !!response;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
