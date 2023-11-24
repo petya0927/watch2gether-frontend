@@ -1,4 +1,6 @@
 import { Room, User } from '@/app/types';
+import { MutableRefObject } from 'react';
+import ReactPlayer from 'react-player';
 import { Socket, io } from 'socket.io-client';
 
 let socket: Socket;
@@ -26,23 +28,16 @@ const isUserInRoom = ({ user, room }: { user: User; room?: Room }) => {
     : false;
 };
 
-export const onRoomData = ({
-  setRoom,
-  data,
-}: {
+interface EventParams<T> {
   setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
-  data: Room;
-}) => {
+  data: T;
+}
+
+export const onRoomDataEvent = ({ setRoom, data }: EventParams<Room>) => {
   setRoom(data);
 };
 
-export const onUserJoined = ({
-  setRoom,
-  data,
-}: {
-  setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
-  data: User;
-}) => {
+export const onUserJoinedEvent = ({ setRoom, data }: EventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
       if (!isUserInRoom({ user: data, room: prev })) {
@@ -57,13 +52,7 @@ export const onUserJoined = ({
   });
 };
 
-export const onUserLeft = ({
-  setRoom,
-  data,
-}: {
-  setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
-  data: User;
-}) => {
+export const onUserLeftEvent = ({ setRoom, data }: EventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
       if (isUserInRoom({ user: data, room: prev })) {
@@ -76,4 +65,42 @@ export const onUserLeft = ({
 
     return prev;
   });
+};
+
+interface HandlePlayerEventParams {
+  playerRef?: MutableRefObject<ReactPlayer | null>;
+  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
+  isPlayingFromSocket: boolean;
+  setIsPlayingFromSocket: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const handlePlayerPlay = ({
+  playerRef,
+  setIsPlaying,
+  isPlayingFromSocket,
+  setIsPlayingFromSocket,
+}: HandlePlayerEventParams) => {
+  if (!isPlayingFromSocket) {
+    console.log('handlePlayerPlay');
+    socket.emit('video-play', {
+      played: playerRef?.current?.getCurrentTime(),
+    });
+    setIsPlaying(true);
+  } else {
+    setIsPlayingFromSocket(false);
+  }
+};
+
+export const handlePlayerPause = ({
+  setIsPlaying,
+  isPlayingFromSocket,
+  setIsPlayingFromSocket,
+}: HandlePlayerEventParams) => {
+  if (!isPlayingFromSocket) {
+    console.log('handlePlayerPause');
+    socket.emit('video-pause');
+    setIsPlaying(false);
+  } else {
+    setIsPlayingFromSocket(false);
+  }
 };

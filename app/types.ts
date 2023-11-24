@@ -15,3 +15,7 @@ export interface User {
   socketId: string;
   username: string;
 }
+
+export interface Player {
+  playing: boolean;
+}
