@@ -48,14 +48,14 @@ export const isUsernameAvailable = async ({
   }
 };
 
-export const isUsernameAvailableHandler = async ({
+export const handleIsUsernameAvailable = async ({
   roomId,
   username,
 }: {
   roomId: string;
   username: string;
 }): Promise<boolean | undefined> => {
-  const roomExists = await isRoomExistsHandler(roomId);
+  const roomExists = await handleIsRoomExists(roomId);
   if (!roomExists) {
     return;
   }
@@ -68,7 +68,7 @@ export const isUsernameAvailableHandler = async ({
   return response.isAvailable;
 };
 
-export const isRoomExistsHandler = async (roomId: string): Promise<boolean> => {
+export const handleIsRoomExists = async (roomId: string): Promise<boolean> => {
   try {
     const response = await getRoom(roomId);
     return !!response;

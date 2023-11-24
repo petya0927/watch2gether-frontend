@@ -1,8 +1,8 @@
 'use client';
 import {
   createRoom,
-  isRoomExistsHandler,
-  isUsernameAvailableHandler,
+  handleIsRoomExists,
+  handleIsUsernameAvailable,
 } from '@/api/rooms';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -63,7 +63,7 @@ export default function Home() {
 
     existingRoomForm.values.existingRoomUrl &&
       username &&
-      isUsernameAvailableHandler({ roomId, username }).then((isAvailable) => {
+      handleIsUsernameAvailable({ roomId, username }).then((isAvailable) => {
         if (isAvailable === false) {
           existingRoomForm.setFieldError(
             'username',
@@ -75,7 +75,7 @@ export default function Home() {
       });
 
     existingRoomForm.values.existingRoomUrl &&
-      isRoomExistsHandler(roomId).then((isExists) => {
+      handleIsRoomExists(roomId).then((isExists) => {
         if (!isExists) {
           existingRoomForm.setFieldError(
             'existingRoomUrl',
