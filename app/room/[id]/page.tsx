@@ -7,7 +7,7 @@ import {
   onUserJoinedEvent,
   onUserLeftEvent,
 } from '@/api/socket';
-import { Room, User } from '@/app/types';
+import { Player, Room, User } from '@/app/types';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
@@ -20,12 +20,14 @@ export default function Room({
   const searchParams = useSearchParams();
   const username = searchParams.get('username');
 
-  const [room, setRoom] = useState<Room>();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isPlayingFromSocket, setIsPlayingFromSocket] =
-    useState<boolean>(false);
+  const reactPlayerRef = useRef<ReactPlayer | null>(null);
 
-  const playerRef = useRef<ReactPlayer | null>(null);
+  const [room, setRoom] = useState<Room>();
+  const [player, setPlayer] = useState<Player>({
+    isPlaying: false,
+    isPlayingFromSocket: false,
+    reactPlayerRef,
+  });
 
   useEffect(() => {
     const socket = initSocket({ id: params.id, username: username as string });
@@ -40,15 +42,21 @@ export default function Room({
 
     socket.on('video-play', (data) => {
       console.log('video-play');
-      setIsPlayingFromSocket(true);
-      setIsPlaying(true);
-      playerRef.current?.seekTo(data.played);
+      setPlayer((prev) => ({
+        ...prev,
+        isPlaying: true,
+        isPlayingFromSocket: true,
+      }));
+      reactPlayerRef.current?.seekTo(data.played);
     });
 
     socket.on('video-pause', () => {
       console.log('video-pause');
-      setIsPlayingFromSocket(true);
-      setIsPlaying(false);
+      setPlayer((prev) => ({
+        ...prev,
+        isPlaying: false,
+        isPlayingFromSocket: true,
+      }));
     });
 
     return () => {
@@ -75,23 +83,20 @@ export default function Room({
             .join(', ')}
         </p>
         <ReactPlayer
-          ref={playerRef}
+          ref={reactPlayerRef}
           url={room.videoUrl}
           controls
-          playing={isPlaying}
+          playing={player.isPlaying}
           onPlay={() =>
             handlePlayerPlay({
-              playerRef,
-              setIsPlaying,
-              isPlayingFromSocket,
-              setIsPlayingFromSocket,
+              player,
+              setPlayer,
             })
           }
           onPause={() =>
             handlePlayerPause({
-              setIsPlaying,
-              isPlayingFromSocket,
-              setIsPlayingFromSocket,
+              player,
+              setPlayer,
             })
           }
         />

@@ -1,4 +1,4 @@
-import { Room, User } from '@/app/types';
+import { Player, Room, User } from '@/app/types';
 import { MutableRefObject } from 'react';
 import ReactPlayer from 'react-player';
 import { Socket, io } from 'socket.io-client';
@@ -69,38 +69,49 @@ export const onUserLeftEvent = ({ setRoom, data }: EventParams<User>) => {
 
 interface HandlePlayerEventParams {
   playerRef?: MutableRefObject<ReactPlayer | null>;
-  setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>;
-  isPlayingFromSocket: boolean;
-  setIsPlayingFromSocket: React.Dispatch<React.SetStateAction<boolean>>;
+  player: Player;
+  setPlayer: React.Dispatch<React.SetStateAction<Player>>;
 }
 
 export const handlePlayerPlay = ({
-  playerRef,
-  setIsPlaying,
-  isPlayingFromSocket,
-  setIsPlayingFromSocket,
+  player,
+  setPlayer,
 }: HandlePlayerEventParams) => {
-  if (!isPlayingFromSocket) {
+  if (!player.isPlayingFromSocket) {
     console.log('handlePlayerPlay');
     socket.emit('video-play', {
-      played: playerRef?.current?.getCurrentTime(),
+      played: player.reactPlayerRef?.current?.getCurrentTime(),
     });
-    setIsPlaying(true);
+
+    setPlayer((prev) => ({
+      ...prev,
+      isPlaying: true,
+    }));
   } else {
-    setIsPlayingFromSocket(false);
+    setPlayer((prev) => ({
+      ...prev,
+      isPlayingFromSocket: false,
+    }));
   }
 };
 
 export const handlePlayerPause = ({
-  setIsPlaying,
-  isPlayingFromSocket,
-  setIsPlayingFromSocket,
+  player,
+  setPlayer,
 }: HandlePlayerEventParams) => {
-  if (!isPlayingFromSocket) {
+  if (!player.isPlayingFromSocket) {
     console.log('handlePlayerPause');
+
     socket.emit('video-pause');
-    setIsPlaying(false);
+
+    setPlayer((prev) => ({
+      ...prev,
+      isPlaying: false,
+    }));
   } else {
-    setIsPlayingFromSocket(false);
+    setPlayer((prev) => ({
+      ...prev,
+      isPlayingFromSocket: false,
+    }));
   }
 };

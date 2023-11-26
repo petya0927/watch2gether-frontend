@@ -1,3 +1,6 @@
+import ReactPlayer from 'react-player';
+import { MutableRefObject } from 'react';
+
 export interface AppContextType {
   username: string;
   setUsername: (username: string) => void;
@@ -17,5 +20,7 @@ export interface User {
 }
 
 export interface Player {
-  playing: boolean;
+  isPlaying: boolean;
+  isPlayingFromSocket: boolean;
+  reactPlayerRef?: MutableRefObject<ReactPlayer | null>;
 }
