@@ -22,5 +22,6 @@ export interface User {
 export interface Player {
   isPlaying: boolean;
   isPlayingFromSocket: boolean;
+  playbackRate: number;
   reactPlayerRef?: MutableRefObject<ReactPlayer | null>;
 }

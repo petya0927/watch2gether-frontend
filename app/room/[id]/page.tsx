@@ -1,5 +1,6 @@
 'use client';
 import {
+  handlePlaybackRateChange,
   handlePlayerPause,
   handlePlayerPlay,
   initSocket,
@@ -26,6 +27,7 @@ export default function Room({
   const [player, setPlayer] = useState<Player>({
     isPlaying: false,
     isPlayingFromSocket: false,
+    playbackRate: 1,
     reactPlayerRef,
   });
 
@@ -41,7 +43,7 @@ export default function Room({
     socket.on('user-left', (data: User) => onUserLeftEvent({ setRoom, data }));
 
     socket.on('video-play', (data) => {
-      console.log('video-play');
+      console.log('video-play', data);
       setPlayer((prev) => ({
         ...prev,
         isPlaying: true,
@@ -56,6 +58,14 @@ export default function Room({
         ...prev,
         isPlaying: false,
         isPlayingFromSocket: true,
+      }));
+    });
+
+    socket.on('video-playback-rate-change', (data) => {
+      console.log('video-playback-rate-change', data);
+      setPlayer((prev) => ({
+        ...prev,
+        playbackRate: data.playbackRate,
       }));
     });
 
@@ -87,6 +97,7 @@ export default function Room({
           url={room.videoUrl}
           controls
           playing={player.isPlaying}
+          playbackRate={player.playbackRate}
           onPlay={() =>
             handlePlayerPlay({
               player,
@@ -96,6 +107,12 @@ export default function Room({
           onPause={() =>
             handlePlayerPause({
               player,
+              setPlayer,
+            })
+          }
+          onPlaybackRateChange={(playbackRate: number) =>
+            handlePlaybackRateChange({
+              playbackRate,
               setPlayer,
             })
           }

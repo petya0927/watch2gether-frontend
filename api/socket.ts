@@ -69,18 +69,19 @@ export const onUserLeftEvent = ({ setRoom, data }: EventParams<User>) => {
 
 interface HandlePlayerEventParams {
   playerRef?: MutableRefObject<ReactPlayer | null>;
-  player: Player;
+  player?: Player;
   setPlayer: React.Dispatch<React.SetStateAction<Player>>;
+  playbackRate?: number;
 }
 
 export const handlePlayerPlay = ({
   player,
   setPlayer,
 }: HandlePlayerEventParams) => {
-  if (!player.isPlayingFromSocket) {
+  if (!player?.isPlayingFromSocket) {
     console.log('handlePlayerPlay');
     socket.emit('video-play', {
-      played: player.reactPlayerRef?.current?.getCurrentTime(),
+      played: player?.reactPlayerRef?.current?.getCurrentTime(),
     });
 
     setPlayer((prev) => ({
@@ -99,7 +100,7 @@ export const handlePlayerPause = ({
   player,
   setPlayer,
 }: HandlePlayerEventParams) => {
-  if (!player.isPlayingFromSocket) {
+  if (!player?.isPlayingFromSocket) {
     console.log('handlePlayerPause');
 
     socket.emit('video-pause');
@@ -114,4 +115,23 @@ export const handlePlayerPause = ({
       isPlayingFromSocket: false,
     }));
   }
+};
+
+export const handlePlaybackRateChange = ({
+  player,
+  setPlayer,
+  playbackRate,
+}: HandlePlayerEventParams) => {
+  if (player?.playbackRate === playbackRate) return;
+
+  console.log('handlePlaybackRateChange', playbackRate);
+
+  socket.emit('video-playback-rate-change', {
+    playbackRate: playbackRate,
+  });
+
+  setPlayer((prev) => ({
+    ...prev,
+    playbackRate: playbackRate || 1,
+  }));
 };
