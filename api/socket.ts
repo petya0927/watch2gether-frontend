@@ -28,16 +28,16 @@ const isUserInRoom = ({ user, room }: { user: User; room?: Room }) => {
     : false;
 };
 
-interface EventParams<T> {
+interface RoomEventParams<T> {
   setRoom: React.Dispatch<React.SetStateAction<Room | undefined>>;
   data: T;
 }
 
-export const onRoomDataEvent = ({ setRoom, data }: EventParams<Room>) => {
+export const onRoomDataEvent = ({ setRoom, data }: RoomEventParams<Room>) => {
   setRoom(data);
 };
 
-export const onUserJoinedEvent = ({ setRoom, data }: EventParams<User>) => {
+export const onUserJoinedEvent = ({ setRoom, data }: RoomEventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
       if (!isUserInRoom({ user: data, room: prev })) {
@@ -52,7 +52,7 @@ export const onUserJoinedEvent = ({ setRoom, data }: EventParams<User>) => {
   });
 };
 
-export const onUserLeftEvent = ({ setRoom, data }: EventParams<User>) => {
+export const onUserLeftEvent = ({ setRoom, data }: RoomEventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
       if (isUserInRoom({ user: data, room: prev })) {
@@ -65,6 +65,46 @@ export const onUserLeftEvent = ({ setRoom, data }: EventParams<User>) => {
 
     return prev;
   });
+};
+
+interface VideoEventParams {
+  setPlayer: React.Dispatch<React.SetStateAction<Player>>;
+  reactPlayerRef?: MutableRefObject<ReactPlayer | null>;
+  data?: any;
+}
+
+export const onVideoPlay = ({
+  setPlayer,
+  reactPlayerRef,
+  data,
+}: VideoEventParams) => {
+  console.log('video-play', data);
+  setPlayer((prev) => ({
+    ...prev,
+    isPlaying: true,
+    isPlayingFromSocket: true,
+  }));
+  reactPlayerRef?.current?.seekTo(data.played);
+};
+
+export const onVideoPause = ({ setPlayer }: VideoEventParams) => {
+  console.log('video-pause');
+  setPlayer((prev) => ({
+    ...prev,
+    isPlaying: false,
+    isPlayingFromSocket: true,
+  }));
+};
+
+export const onVideoPlaybackRateChange = ({
+  setPlayer,
+  data,
+}: VideoEventParams) => {
+  console.log('video-playback-rate-change', data);
+  setPlayer((prev) => ({
+    ...prev,
+    playbackRate: data.playbackRate,
+  }));
 };
 
 interface HandlePlayerEventParams {

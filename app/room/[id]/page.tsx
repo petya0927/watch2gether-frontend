@@ -7,6 +7,9 @@ import {
   onRoomDataEvent,
   onUserJoinedEvent,
   onUserLeftEvent,
+  onVideoPause,
+  onVideoPlay,
+  onVideoPlaybackRateChange,
 } from '@/api/socket';
 import { Player, Room, User } from '@/app/types';
 import { useSearchParams } from 'next/navigation';
@@ -37,37 +40,20 @@ export default function Room({
     socket.on('room-data', (data: Room) => onRoomDataEvent({ setRoom, data }));
 
     socket.on('user-joined', (data: User) =>
-      onUserJoinedEvent({ setRoom, data }),
+      onUserJoinedEvent({ setRoom, data })
     );
 
     socket.on('user-left', (data: User) => onUserLeftEvent({ setRoom, data }));
 
-    socket.on('video-play', (data) => {
-      console.log('video-play', data);
-      setPlayer((prev) => ({
-        ...prev,
-        isPlaying: true,
-        isPlayingFromSocket: true,
-      }));
-      reactPlayerRef.current?.seekTo(data.played);
-    });
+    socket.on('video-play', (data) =>
+      onVideoPlay({ setPlayer, reactPlayerRef, data })
+    );
 
-    socket.on('video-pause', () => {
-      console.log('video-pause');
-      setPlayer((prev) => ({
-        ...prev,
-        isPlaying: false,
-        isPlayingFromSocket: true,
-      }));
-    });
+    socket.on('video-pause', () => onVideoPause({ setPlayer }));
 
-    socket.on('video-playback-rate-change', (data) => {
-      console.log('video-playback-rate-change', data);
-      setPlayer((prev) => ({
-        ...prev,
-        playbackRate: data.playbackRate,
-      }));
-    });
+    socket.on('video-playback-rate-change', (data) =>
+      onVideoPlaybackRateChange({ setPlayer, data })
+    );
 
     return () => {
       socket.off('room-data');
