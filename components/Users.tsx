@@ -1,11 +1,11 @@
 import { Room } from '@/app/types';
 import User from './User';
 
-interface UsersProps {
+interface UsersComponentProps {
   room: Room;
 }
 
-const Users = ({ room }: UsersProps) => {
+const Users = ({ room }: UsersComponentProps) => {
   const usersWithoutOwner = room.users.filter(
     (user) => user.username !== room.owner
   );

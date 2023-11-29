@@ -1,11 +1,11 @@
 import { IconUser, IconCrown } from '@tabler/icons-react';
 
-interface UserProps {
+interface UserComponentProps {
   username: string;
   isOwner: boolean;
 }
 
-const User = ({ username, isOwner }: UserProps) => {
+const User = ({ username, isOwner }: UserComponentProps) => {
   return (
     <div className="flex items-center gap-2">
       {isOwner ? <IconCrown /> : <IconUser />}
