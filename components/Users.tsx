@@ -11,7 +11,7 @@ const Users = ({ room }: UsersComponentProps) => {
   );
 
   return (
-    <div className="bg-white flex flex-col gap-4 items-start rounded-2xl p-4 w-full md:w-1/3 lg:w-1/4 shadow-lg">
+    <div className="bg-white flex flex-col gap-4 items-start rounded-2xl p-4 w-full shadow-lg">
       <h2 className="font-bold text-xl">Users</h2>
       <User username={room.owner} isOwner />
 

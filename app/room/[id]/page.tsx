@@ -6,6 +6,7 @@ import {
   onUserLeftEvent,
 } from '@/api/socket';
 import { Room, User } from '@/app/types';
+import RoomLink from '@/components/RoomLink';
 import Users from '@/components/Users';
 import VideoPlayer from '@/components/VideoPlayer';
 import { useSearchParams } from 'next/navigation';
@@ -55,7 +56,11 @@ export default function Room({
     room && (
       <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
         <VideoPlayer room={room} socket={socket} />
-        <Users room={room} />
+
+        <div className="flex flex-col gap-8 items-center justify-start lg:justify-center w-full md:w-1/2 lg:w-1/4">
+          <Users room={room} />
+          <RoomLink roomLink={window.location.href} />
+        </div>
       </div>
     )
   );
