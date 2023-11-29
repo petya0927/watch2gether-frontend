@@ -20,7 +20,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-br from-purple-900 to-red-800">
+      <body className="h-screen flex flex-col items-center justify-center p-4 md:p-8 bg-gradient-to-br from-purple-900 to-red-800">
         <App>{children}</App>
       </body>
     </html>

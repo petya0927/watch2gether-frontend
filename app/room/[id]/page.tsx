@@ -12,6 +12,7 @@ import {
   onVideoPlaybackRateChange,
 } from '@/api/socket';
 import { Player, Room, User } from '@/app/types';
+import Users from '@/components/Users';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
@@ -68,41 +69,36 @@ export default function Room({
 
   return (
     room && (
-      <div className="bg-white text-black">
-        <h1>
-          Room {room.id} {room.owner}
-        </h1>
-        <p>
-          users:{' '}
-          {room.users
-            .map((user) => `${user.username}: ${user.socketId}`)
-            .join(', ')}
-        </p>
-        <ReactPlayer
-          ref={reactPlayerRef}
-          url={room.videoUrl}
-          controls
-          playing={player.isPlaying}
-          playbackRate={player.playbackRate}
-          onPlay={() =>
-            handlePlayerPlay({
-              player,
-              setPlayer,
-            })
-          }
-          onPause={() =>
-            handlePlayerPause({
-              player,
-              setPlayer,
-            })
-          }
-          onPlaybackRateChange={(playbackRate: number) =>
-            handlePlaybackRateChange({
-              playbackRate,
-              setPlayer,
-            })
-          }
-        />
+      <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
+        <div className="w-screen sm:w-full md:w-2/3 md:max-w-2xl aspect-video -m-4 mb-0 sm:m-0 sm:rounded-2xl sm:overflow-hidden">
+          <ReactPlayer
+            className="h-full w-full"
+            ref={reactPlayerRef}
+            url={room.videoUrl}
+            controls
+            playing={player.isPlaying}
+            playbackRate={player.playbackRate}
+            onPlay={() =>
+              handlePlayerPlay({
+                player,
+                setPlayer,
+              })
+            }
+            onPause={() =>
+              handlePlayerPause({
+                player,
+                setPlayer,
+              })
+            }
+            onPlaybackRateChange={(playbackRate: number) =>
+              handlePlaybackRateChange({
+                playbackRate,
+                setPlayer,
+              })
+            }
+          />
+        </div>
+        <Users room={room} />
       </div>
     )
   );
