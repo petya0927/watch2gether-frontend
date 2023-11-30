@@ -10,7 +10,7 @@ const RoomLink = ({ roomLink }: { roomLink: string }) => {
     .replace('https://', '');
 
   return (
-    <div className="bg-white flex flex-col gap-4 items-start rounded-2xl p-4 w-full shadow-lg">
+    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full shadow-lg">
       <h2 className="font-bold text-xl">Room link</h2>
       <TextInput
         value={cleanRoomLink}

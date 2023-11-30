@@ -14,6 +14,10 @@ export interface Room {
   createdAt?: string;
 }
 
+export enum RoomErrors {
+  USER_ALREADY_IN_ROOM = 'USER_ALREADY_IN_ROOM',
+}
+
 export interface User {
   socketId: string;
   username: string;

@@ -5,7 +5,7 @@ import {
   onUserJoinedEvent,
   onUserLeftEvent,
 } from '@/api/socket';
-import { Room, User } from '@/app/types';
+import { Room, RoomErrors, User } from '@/app/types';
 import RoomLink from '@/components/RoomLink';
 import Users from '@/components/Users';
 import VideoPlayer from '@/components/VideoPlayer';
@@ -22,6 +22,7 @@ export default function Room({
   const username = searchParams.get('username');
 
   const [room, setRoom] = useState<Room>();
+  const [roomError, setRoomError] = useState<RoomErrors | null>(null);
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
@@ -31,6 +32,11 @@ export default function Room({
     });
 
     setSocket(socketInstance);
+    setRoomError(null);
+
+    socketInstance.on('user-already-in-room', () => {
+      setRoomError(RoomErrors.USER_ALREADY_IN_ROOM);
+    });
 
     socketInstance.on('room-data', (data: Room) =>
       onRoomDataEvent({ setRoom, data })
@@ -53,15 +59,22 @@ export default function Room({
   }, [params.id, username]);
 
   return (
-    room && (
-      <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
-        <VideoPlayer room={room} socket={socket} />
+    <>
+      {room && !roomError && (
+        <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
+          <VideoPlayer room={room} socket={socket} />
 
-        <div className="flex flex-col gap-8 items-center justify-start lg:justify-center w-full md:w-1/2 lg:w-1/4">
-          <Users room={room} />
-          <RoomLink roomLink={window.location.href} />
+          <div className="flex flex-col gap-8 items-center justify-start lg:justify-center w-full md:w-1/2 lg:w-1/4">
+            <Users room={room} />
+            <RoomLink roomLink={window.location.href} />
+          </div>
         </div>
-      </div>
-    )
+      )}
+      {roomError && (
+        <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
+          <p>{roomError}</p>
+        </div>
+      )}
+    </>
   );
 }
