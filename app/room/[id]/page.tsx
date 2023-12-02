@@ -7,20 +7,19 @@ import {
 } from '@/api/socket';
 import { Room, RoomErrors, User } from '@/app/types';
 import RoomLink from '@/components/RoomLink';
+import UsernameTaken from '@/components/UsernameTaken';
 import Users from '@/components/Users';
 import VideoPlayer from '@/components/VideoPlayer';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
-export default function Room({
-  params,
-}: {
-  params: { id: string; username: string };
-}) {
+export default function Room({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
-  const username = searchParams.get('username');
 
+  const [username, setUsername] = useState<string | null>(
+    searchParams.get('username')
+  );
   const [room, setRoom] = useState<Room>();
   const [roomError, setRoomError] = useState<RoomErrors | null>(null);
   const [socket, setSocket] = useState<Socket>();
@@ -34,21 +33,24 @@ export default function Room({
     setSocket(socketInstance);
     setRoomError(null);
 
-    socketInstance.on('user-already-in-room', () => {
-      setRoomError(RoomErrors.USER_ALREADY_IN_ROOM);
+    socketInstance.on('username-taken', () => {
+      console.log('username taken');
+      setRoomError(RoomErrors.USERNAME_TAKEN);
     });
 
     socketInstance.on('room-data', (data: Room) =>
       onRoomDataEvent({ setRoom, data })
     );
 
-    socketInstance.on('user-joined', (data: User) =>
-      onUserJoinedEvent({ setRoom, data })
-    );
+    socketInstance.on('user-joined', (data: User) => {
+      onUserJoinedEvent({ setRoom, data });
+      console.log('user joined', data);
+    });
 
-    socketInstance.on('user-left', (data: User) =>
-      onUserLeftEvent({ setRoom, data })
-    );
+    socketInstance.on('user-left', (data: User) => {
+      onUserLeftEvent({ setRoom, data });
+      console.log('user left', data);
+    });
 
     return () => {
       socketInstance.off('room-data');
@@ -70,10 +72,8 @@ export default function Room({
           </div>
         </div>
       )}
-      {roomError && (
-        <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
-          <p>{roomError}</p>
-        </div>
+      {roomError === RoomErrors.USERNAME_TAKEN && (
+        <UsernameTaken roomId={params.id} setUsername={setUsername} />
       )}
     </>
   );

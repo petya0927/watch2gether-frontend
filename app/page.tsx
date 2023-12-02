@@ -1,12 +1,14 @@
 'use client';
-import {
-  createRoom,
-  handleIsRoomExists,
-  handleIsUsernameAvailable,
-} from '@/api/rooms';
+import { createRoom, handleIsUsernameTaken, isRoomExists } from '@/api/rooms';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconArrowRight, IconPlus } from '@tabler/icons-react';
+import {
+  IconArrowRight,
+  IconBrandYoutube,
+  IconLink,
+  IconPlus,
+  IconUser,
+} from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -63,23 +65,18 @@ export default function Home() {
 
     existingRoomForm.values.existingRoomUrl &&
       username &&
-      handleIsUsernameAvailable({ roomId, username }).then((isAvailable) => {
-        if (isAvailable === false) {
-          existingRoomForm.setFieldError(
-            'username',
-            'Username is already taken in this room',
-          );
-        } else {
-          existingRoomForm.setFieldError('username', '');
-        }
+      handleIsUsernameTaken({
+        form: existingRoomForm,
+        roomId,
+        username,
       });
 
     existingRoomForm.values.existingRoomUrl &&
-      handleIsRoomExists(roomId).then((isExists) => {
+      isRoomExists(roomId).then((isExists) => {
         if (!isExists) {
           existingRoomForm.setFieldError(
             'existingRoomUrl',
-            'Room does not exist',
+            'Room does not exist'
           );
         } else {
           existingRoomForm.setFieldError('existingRoomUrl', '');
@@ -98,7 +95,7 @@ export default function Home() {
       }),
     onSuccess: (data) => {
       router.push(
-        `/room/${data.id}?username=${createRoomForm.values.username}`,
+        `/room/${data.id}?username=${createRoomForm.values.username}`
       );
     },
   });
@@ -107,28 +104,36 @@ export default function Home() {
     router.push(
       existingRoomForm.values.existingRoomUrl +
         '?username=' +
-        existingRoomForm.values.username,
+        existingRoomForm.values.username
     );
   };
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center my-auto">
-      <h1 className="font-bold text-white text-4xl text-center">
-        Welcome to Watch2gether!
-      </h1>
-      <p className="text-white text-center max-w-xl">
-        Watch videos with your friends together from anywhere in real-time.
-      </p>
+      <div className="flex flex-col gap-4">
+        <h1 className="font-bold text-white text-4xl text-center">
+          Welcome to Watch2gether!
+        </h1>
+        <p className="text-white text-center max-w-xl">
+          Watch videos with your friends together from anywhere in real-time.
+        </p>
+      </div>
       <TextInput
         placeholder="Choose username"
+        leftSection={<IconUser size={20} />}
         value={username}
         onChange={(event) => setUsername(event.currentTarget.value)}
         classNames={{
-          root: 'w-full sm:w-1/2',
+          root: 'w-2/3 sm:w-1/2',
           input: `!bg-transparent border-1 rounded-md ${
             createRoomForm.errors.username || existingRoomForm.errors.username
               ? 'border-red-500 text-red-500'
               : 'border-white text-white'
+          }`,
+          section: `${
+            createRoomForm.errors.username || existingRoomForm.errors.username
+              ? 'text-red-500'
+              : ''
           }`,
         }}
         error={
@@ -148,12 +153,13 @@ export default function Home() {
           <p className="text-white text-center">
             Paste a YouTube video link below to start
           </p>
-          <div className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center active">
+          <div className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center">
             <TextInput
               placeholder="YouTube video link"
+              leftSection={<IconBrandYoutube size={20} />}
               variant="filled"
               classNames={{
-                root: 'w-full sm:w-1/2',
+                root: 'w-2/3 sm:w-1/2',
                 input: `!bg-transparent border-1 rounded-md ${
                   createRoomForm.errors.videoUrl
                     ? 'border-red-500 text-red-500'
@@ -174,7 +180,7 @@ export default function Home() {
               }
               loading={createRoomMutation.isPending}
               classNames={{
-                root: 'w-full sm:w-auto rounded-md self-start',
+                root: 'w-auto rounded-md sm:self-start',
                 label: 'flex gap-1 items-center justify-center',
               }}
             >
@@ -195,8 +201,9 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center">
             <TextInput
               placeholder="Link to existing room"
+              leftSection={<IconLink size={20} />}
               classNames={{
-                root: 'w-full sm:w-1/2',
+                root: 'w-2/3 sm:w-1/2',
                 input: `!bg-transparent border-1 rounded-md ${
                   existingRoomForm.errors.existingRoomUrl
                     ? 'border-red-500 text-red-500'
@@ -216,7 +223,7 @@ export default function Home() {
                 !existingRoomForm.values.username
               }
               classNames={{
-                root: 'w-full sm:w-auto rounded-md self-start',
+                root: 'w-auto rounded-md sm:self-start',
                 label: 'flex gap-1 items-center justify-center',
               }}
             >

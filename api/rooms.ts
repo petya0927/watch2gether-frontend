@@ -28,47 +28,51 @@ export const getRoom = async (roomId: string) => {
   }
 };
 
-export const isUsernameAvailable = async ({
-  roomId,
-  username,
-}: {
-  roomId: string;
-  username: string;
-}) => {
-  if (!username || !roomId) return;
-
-  try {
-    const res = await axios.get(
-      `room/${roomId}/isUsernameAvailable?username=${username}`,
-    );
-    return res.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const handleIsUsernameAvailable = async ({
+export const isUsernameTaken = async ({
   roomId,
   username,
 }: {
   roomId: string;
   username: string;
 }): Promise<boolean | undefined> => {
-  const roomExists = await handleIsRoomExists(roomId);
+  if (!username || !roomId) return;
+
+  const roomExists = await isRoomExists(roomId);
   if (!roomExists) {
     return;
   }
 
-  const response = await isUsernameAvailable({
-    roomId,
-    username: username,
-  });
-
-  return response.isAvailable;
+  try {
+    const res = await axios.get(
+      `room/${roomId}/isUsernameTaken?username=${username}`
+    );
+    return res.data.isTaken;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
-export const handleIsRoomExists = async (roomId: string): Promise<boolean> => {
+export const handleIsUsernameTaken = async ({
+  form,
+  roomId,
+  username,
+}: {
+  form: any;
+  roomId: string;
+  username: string;
+}) => {
+  const isTaken = await isUsernameTaken({ roomId, username });
+  if (isTaken) {
+    form.setFieldError('username', 'Username is already taken in this room');
+  } else {
+    form.setFieldError('username', '');
+  }
+
+  return isTaken;
+};
+
+export const isRoomExists = async (roomId: string): Promise<boolean> => {
   try {
     const response = await getRoom(roomId);
     return !!response;

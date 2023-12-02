@@ -22,7 +22,7 @@ export const initSocket = ({
   return socket;
 };
 
-const isUserInRoom = ({ user, room }: { user: User; room?: Room }) => {
+const isUsernameTaken = ({ user, room }: { user: User; room?: Room }) => {
   return room?.users.find((u: User) => u.username === user.username)
     ? true
     : false;
@@ -40,7 +40,7 @@ export const onRoomDataEvent = ({ setRoom, data }: RoomEventParams<Room>) => {
 export const onUserJoinedEvent = ({ setRoom, data }: RoomEventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
-      if (!isUserInRoom({ user: data, room: prev })) {
+      if (!isUsernameTaken({ user: data, room: prev })) {
         return {
           ...prev,
           users: [...prev.users, data],
@@ -55,10 +55,10 @@ export const onUserJoinedEvent = ({ setRoom, data }: RoomEventParams<User>) => {
 export const onUserLeftEvent = ({ setRoom, data }: RoomEventParams<User>) => {
   setRoom((prev) => {
     if (prev) {
-      if (isUserInRoom({ user: data, room: prev })) {
+      if (isUsernameTaken({ user: data, room: prev })) {
         return {
           ...prev,
-          users: prev.users.filter((u) => u.username !== data.username),
+          users: prev.users.filter((u) => u.socketId !== data.socketId),
         };
       }
     }

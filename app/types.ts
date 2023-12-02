@@ -15,7 +15,7 @@ export interface Room {
 }
 
 export enum RoomErrors {
-  USER_ALREADY_IN_ROOM = 'USER_ALREADY_IN_ROOM',
+  USERNAME_TAKEN = 'USERNAME_TAKEN',
 }
 
 export interface User {
