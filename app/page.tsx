@@ -50,10 +50,28 @@ export default function Home() {
         }
       },
       existingRoomUrl: (value) => {
-        if (!value.includes(window.location.origin)) {
+        const url = new URL(value);
+        const roomId = url.pathname.split('/')[2];
+
+        if (
+          roomId.length !== 16 ||
+          !value.includes(window.location.host + '/room/' + roomId)
+        ) {
           return 'Please enter a valid room link';
         }
       },
+    },
+    onValuesChange: (values) => {
+      if (values.existingRoomUrl) {
+        let url = new URL(values.existingRoomUrl);
+        url.searchParams.delete('username');
+
+        if (!/^https?:\/\//i.test(values.existingRoomUrl)) {
+          url = new URL('https://' + values.existingRoomUrl);
+        }
+
+        values.existingRoomUrl = url.toString();
+      }
     },
   });
 
@@ -110,9 +128,7 @@ export default function Home() {
 
   const handleJoinRoom = () => {
     router.push(
-      existingRoomForm.values.existingRoomUrl +
-        '?username=' +
-        existingRoomForm.values.username
+      `${existingRoomForm.values.existingRoomUrl}?username=${username}`
     );
   };
 

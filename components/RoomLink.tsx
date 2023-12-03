@@ -4,20 +4,16 @@ import { IconCheck, IconCopy } from '@tabler/icons-react';
 const RoomLink = ({ roomLink }: { roomLink: string }) => {
   const url = new URL(roomLink);
   url.searchParams.delete('username');
-  const cleanRoomLink = url
-    .toString()
-    .replace('http://', '')
-    .replace('https://', '');
 
   return (
     <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full shadow-lg">
       <h2 className="font-bold text-xl">Room link</h2>
       <TextInput
-        value={cleanRoomLink}
+        value={url.href}
         className="w-full"
         readOnly
         rightSection={
-          <CopyButton value={cleanRoomLink} timeout={2000}>
+          <CopyButton value={url.href} timeout={2000}>
             {({ copied, copy }) => (
               <Tooltip
                 label={copied ? 'Copied!' : 'Copy'}
