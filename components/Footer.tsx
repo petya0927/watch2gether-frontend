@@ -1,11 +1,11 @@
-import { IconBrandGithub, IconGitMerge } from "@tabler/icons-react";
-import packageInfo from "../package.json";
+import { IconBrandGithub, IconGitMerge } from '@tabler/icons-react';
+import packageInfo from '../package.json';
 
 const Footer = () => {
   return (
     <div className="mt-auto">
       <p className="text-white">
-        By:{" "}
+        By{' '}
         <a
           href="https://github.com/petya0927"
           target="_blank"
@@ -13,11 +13,11 @@ const Footer = () => {
         >
           petya0927
         </a>
-        <IconBrandGithub className="inline-block ml-1" />
+        <IconBrandGithub className="inline-block ml-1" size={20} />
       </p>
       <p className="text-white">
         Version: {packageInfo.version}
-        <IconGitMerge className="inline-block ml-1" />
+        <IconGitMerge className="inline-block ml-1" size={20} />
       </p>
     </div>
   );
