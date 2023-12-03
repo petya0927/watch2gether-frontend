@@ -66,9 +66,17 @@ export default function Home() {
     existingRoomForm.values.existingRoomUrl &&
       username &&
       handleIsUsernameTaken({
-        form: existingRoomForm,
         roomId,
         username,
+      }).then((isTaken) => {
+        if (isTaken) {
+          existingRoomForm.setFieldError(
+            'username',
+            'Username is already taken in this room'
+          );
+        } else {
+          existingRoomForm.setFieldError('username', '');
+        }
       });
 
     existingRoomForm.values.existingRoomUrl &&

@@ -54,20 +54,13 @@ export const isUsernameTaken = async ({
 };
 
 export const handleIsUsernameTaken = async ({
-  form,
   roomId,
   username,
 }: {
-  form: any;
   roomId: string;
   username: string;
 }) => {
   const isTaken = await isUsernameTaken({ roomId, username });
-  if (isTaken) {
-    form.setFieldError('username', 'Username is already taken in this room');
-  } else {
-    form.setFieldError('username', '');
-  }
 
   return isTaken;
 };
