@@ -28,7 +28,15 @@ const UsernameTaken = ({ roomId, setUsername }: UsernameTakenProps) => {
 
   useEffect(() => {
     form.values.username &&
-      handleIsUsernameTaken({ form, roomId, username: form.values.username });
+      handleIsUsernameTaken({ roomId, username: form.values.username }).then(
+        (isTaken) => {
+          if (isTaken) {
+            form.setFieldError('username', 'Username is already taken');
+          } else {
+            form.setFieldError('username', null);
+          }
+        }
+      );
   }, [form.values.username]);
 
   const handleSubmit = () => {
