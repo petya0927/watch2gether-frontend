@@ -119,7 +119,7 @@ export default function Home() {
         videoUrl: createRoomForm.values.videoUrl,
         owner: createRoomForm.values.username,
       }),
-    onSuccess: (data) => {
+    onSuccess: (data: { id: string }) => {
       router.push(
         `/room/${data.id}?username=${createRoomForm.values.username}`
       );
