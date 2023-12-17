@@ -16,6 +16,7 @@ export interface Room {
 
 export enum RoomErrors {
   USERNAME_TAKEN = 'USERNAME_TAKEN',
+  USERNAME_EMPTY = 'USERNAME_EMPTY',
 }
 
 export interface User {

@@ -7,7 +7,7 @@ import {
 } from '@/api/socket';
 import { Room, RoomErrors, User } from '@/app/types';
 import RoomLink from '@/components/RoomLink';
-import UsernameTaken from '@/components/UsernameTaken';
+import UsernameErrorComponent from '@/components/UsernameErrorComponent';
 import Users from '@/components/Users';
 import VideoPlayer from '@/components/VideoPlayer';
 import { useSearchParams } from 'next/navigation';
@@ -25,6 +25,16 @@ export default function Room({ params }: { params: { id: string } }) {
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
+    if (!username) {
+      setRoomError(RoomErrors.USERNAME_EMPTY);
+    } else {
+      setRoomError(null);
+    }
+  }, [username]);
+
+  useEffect(() => {
+    if (!username) return;
+
     const socketInstance = initSocket({
       id: params.id,
       username: username as string,
@@ -34,7 +44,6 @@ export default function Room({ params }: { params: { id: string } }) {
     setRoomError(null);
 
     socketInstance.on('username-taken', () => {
-      console.log('username taken');
       setRoomError(RoomErrors.USERNAME_TAKEN);
     });
 
@@ -62,7 +71,7 @@ export default function Room({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {room && !roomError && (
+      {room && !roomError && username && (
         <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
           <VideoPlayer room={room} socket={socket} />
 
@@ -72,8 +81,12 @@ export default function Room({ params }: { params: { id: string } }) {
           </div>
         </div>
       )}
-      {roomError === RoomErrors.USERNAME_TAKEN && (
-        <UsernameTaken roomId={params.id} setUsername={setUsername} />
+      {roomError && (
+        <UsernameErrorComponent
+          roomId={params.id}
+          setUsername={setUsername}
+          roomError={roomError}
+        />
       )}
     </>
   );
