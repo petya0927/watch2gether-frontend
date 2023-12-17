@@ -12,7 +12,13 @@ export const initSocket = ({
   id: string;
   username: string;
 }) => {
-  socket = io('http://localhost:8081', {
+  const url = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || '';
+
+  if (url === '') {
+    throw new Error('Backend url is not defined');
+  }
+
+  socket = io(url, {
     query: {
       id,
       username,
