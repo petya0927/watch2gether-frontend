@@ -181,7 +181,6 @@ export default function Home() {
             <TextInput
               placeholder="YouTube video link"
               leftSection={<IconBrandYoutube size={20} />}
-              variant="filled"
               classNames={{
                 root: 'w-2/3 sm:w-1/2',
                 input: `!bg-transparent border-1 rounded-md ${
@@ -193,8 +192,7 @@ export default function Home() {
               {...createRoomForm.getInputProps('videoUrl')}
             />
             <Button
-              variant="white"
-              color="black"
+              variant="default"
               type="submit"
               disabled={
                 !!createRoomForm.errors.videoUrl ||
@@ -237,8 +235,7 @@ export default function Home() {
               {...existingRoomForm.getInputProps('existingRoomUrl')}
             />
             <Button
-              variant="white"
-              color="black"
+              variant="default"
               type="submit"
               disabled={
                 !!existingRoomForm.errors.existingRoomUrl ||
