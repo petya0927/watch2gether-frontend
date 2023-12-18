@@ -201,7 +201,7 @@ export default function Home() {
               }
               loading={createRoomMutation.isPending}
               classNames={{
-                root: 'w-auto rounded-md sm:self-start',
+                root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
                 label: 'flex gap-1 items-center justify-center',
               }}
             >
@@ -242,7 +242,7 @@ export default function Home() {
                 !existingRoomForm.values.username
               }
               classNames={{
-                root: 'w-auto rounded-md sm:self-start',
+                root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
                 label: 'flex gap-1 items-center justify-center',
               }}
             >
