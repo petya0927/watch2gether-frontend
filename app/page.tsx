@@ -192,7 +192,6 @@ export default function Home() {
               {...createRoomForm.getInputProps('videoUrl')}
             />
             <Button
-              variant="default"
               type="submit"
               disabled={
                 !!createRoomForm.errors.videoUrl ||
@@ -235,7 +234,6 @@ export default function Home() {
               {...existingRoomForm.getInputProps('existingRoomUrl')}
             />
             <Button
-              variant="default"
               type="submit"
               disabled={
                 !!existingRoomForm.errors.existingRoomUrl ||
