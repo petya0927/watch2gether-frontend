@@ -1,4 +1,5 @@
 'use client';
+import { isRoomExists } from '@/api/rooms';
 import {
   initSocket,
   onRoomDataEvent,
@@ -10,12 +11,11 @@ import RoomLink from '@/components/RoomLink';
 import UsernameErrorComponent from '@/components/UsernameErrorComponent';
 import Users from '@/components/Users';
 import VideoPlayer from '@/components/VideoPlayer';
+import { Button } from '@mantine/core';
+import { IconArrowLeft } from '@tabler/icons-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
-import { isRoomExists } from '@/api/rooms';
-import { Button } from '@mantine/core';
-import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 
 export default function Room({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
@@ -33,9 +33,9 @@ export default function Room({ params }: { params: { id: string } }) {
       if (!roomExists) {
         setRoomError(RoomErrors.ROOM_NOT_FOUND);
 
-        // setTimeout(() => {
-        //   window.location.href = '/';
-        // }, 5000);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 5000);
       }
     };
 
