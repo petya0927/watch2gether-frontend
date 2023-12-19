@@ -1,16 +1,22 @@
 import { handleIsUsernameTaken } from '@/api/rooms';
+import { RoomErrors } from '@/app/types';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowRight, IconUser } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-interface UsernameTakenProps {
+interface UsernameErrorComponentProps {
   roomId: string;
   setUsername: React.Dispatch<React.SetStateAction<string | null>>;
+  roomError: RoomErrors | null;
 }
 
-const UsernameTaken = ({ roomId, setUsername }: UsernameTakenProps) => {
+const UsernameErrorComponent = ({
+  roomId,
+  setUsername,
+  roomError,
+}: UsernameErrorComponentProps) => {
   const router = useRouter();
 
   const form = useForm({
@@ -52,9 +58,17 @@ const UsernameTaken = ({ roomId, setUsername }: UsernameTakenProps) => {
         <h1 className="font-bold text-white text-4xl text-center">
           Welcome to Watch2gether!
         </h1>
-        <p className="text-white text-center max-w-xl">
-          Username is already taken in this room
-        </p>
+        {roomError === RoomErrors.USERNAME_TAKEN && (
+          <p className="text-white text-center max-w-xl">
+            Username is already taken in this room
+          </p>
+        )}
+
+        {roomError === RoomErrors.USERNAME_EMPTY && (
+          <p className="text-white text-center max-w-xl">
+            Please enter a username to join the room
+          </p>
+        )}
       </div>
       <form
         onSubmit={form.onSubmit(handleSubmit)}
@@ -81,7 +95,7 @@ const UsernameTaken = ({ roomId, setUsername }: UsernameTakenProps) => {
           type="submit"
           disabled={!!form.errors.username || !form.values.username}
           classNames={{
-            root: 'w-auto rounded-md',
+            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
             label: 'flex gap-1 items-center justify-center',
           }}
         >
@@ -93,4 +107,4 @@ const UsernameTaken = ({ roomId, setUsername }: UsernameTakenProps) => {
   );
 };
 
-export default UsernameTaken;
+export default UsernameErrorComponent;
