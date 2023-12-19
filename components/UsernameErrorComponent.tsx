@@ -95,7 +95,7 @@ const UsernameErrorComponent = ({
           type="submit"
           disabled={!!form.errors.username || !form.values.username}
           classNames={{
-            root: 'w-auto rounded-md',
+            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
             label: 'flex gap-1 items-center justify-center',
           }}
         >
