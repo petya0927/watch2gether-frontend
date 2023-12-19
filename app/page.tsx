@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 export default function Home() {
   const router = useRouter();
   const [username, setUsername] = useState('');
+  const [roomExistsError, setRoomExistsError] = useState('');
 
   const createRoomForm = useForm({
     initialValues: {
@@ -41,7 +42,7 @@ export default function Home() {
   const existingRoomForm = useForm({
     initialValues: {
       username,
-      existingRoomUrl: '',
+      url: '',
     },
     validate: {
       username: (value) => {
@@ -49,8 +50,8 @@ export default function Home() {
           return 'Please enter a username';
         }
       },
-      existingRoomUrl: (value) => {
-        const url = new URL(value);
+      url: (value) => {
+        let url = new URL(value);
         const roomId = url.pathname.split('/')[2];
 
         if (
@@ -58,35 +59,25 @@ export default function Home() {
           !value.includes(window.location.host + '/room/' + roomId)
         ) {
           return 'Please enter a valid room link';
+        } else if (roomExistsError) {
+          return roomExistsError;
         }
       },
-    },
-    onValuesChange: (values) => {
-      if (values.existingRoomUrl) {
-        let url = new URL(values.existingRoomUrl);
-        url.searchParams.delete('username');
-
-        if (!/^https?:\/\//i.test(values.existingRoomUrl)) {
-          url = new URL('https://' + values.existingRoomUrl);
-        }
-
-        values.existingRoomUrl = url.toString();
-      }
     },
   });
 
   useEffect(() => {
-    const roomId = existingRoomForm.values.existingRoomUrl
+    const roomId = existingRoomForm.values.url
       .trim()
       .split('/')
       .pop() as string;
 
-    existingRoomForm.values.existingRoomUrl &&
-      username &&
-      handleIsUsernameTaken({
-        roomId,
-        username,
-      }).then((isTaken) => {
+    const checkUsernameAvailability = async () => {
+      if (existingRoomForm.values.url && username) {
+        const isTaken = await handleIsUsernameTaken({
+          roomId,
+          username,
+        });
         if (isTaken) {
           existingRoomForm.setFieldError(
             'username',
@@ -95,23 +86,31 @@ export default function Home() {
         } else {
           existingRoomForm.setFieldError('username', '');
         }
-      });
+      }
+    };
 
-    existingRoomForm.values.existingRoomUrl &&
-      isRoomExists(roomId).then((isExists) => {
+    const validateRoomExistence = async () => {
+      const roomId = existingRoomForm.values.url
+        .trim()
+        .split('/')
+        .pop() as string;
+
+      if (roomId) {
+        const isExists = await isRoomExists(roomId);
         if (!isExists) {
-          existingRoomForm.setFieldError(
-            'existingRoomUrl',
-            'Room does not exist'
-          );
+          setRoomExistsError('Room does not exist');
         } else {
-          existingRoomForm.setFieldError('existingRoomUrl', '');
+          setRoomExistsError('');
         }
-      });
+      }
+    };
+
+    checkUsernameAvailability();
+    validateRoomExistence();
 
     createRoomForm.setFieldValue('username', username);
     existingRoomForm.setFieldValue('username', username);
-  }, [username, existingRoomForm.values.existingRoomUrl]);
+  }, [username, existingRoomForm.values.url]);
 
   const createRoomMutation = useMutation({
     mutationFn: () =>
@@ -127,9 +126,11 @@ export default function Home() {
   });
 
   const handleJoinRoom = () => {
-    router.push(
-      `${existingRoomForm.values.existingRoomUrl}?username=${username}`
-    );
+    let url = existingRoomForm.values.url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = window.location.protocol + '//' + url;
+    }
+    router.push(`${url}?username=${username}`);
   };
 
   return (
@@ -231,14 +232,14 @@ export default function Home() {
                     : 'border-white text-white'
                 }`,
               }}
-              {...existingRoomForm.getInputProps('existingRoomUrl')}
+              {...existingRoomForm.getInputProps('url')}
             />
             <Button
               type="submit"
               disabled={
-                !!existingRoomForm.errors.existingRoomUrl ||
+                !!existingRoomForm.errors.url ||
                 !!existingRoomForm.errors.username ||
-                !existingRoomForm.values.existingRoomUrl ||
+                !existingRoomForm.values.url ||
                 !existingRoomForm.values.username
               }
               classNames={{
