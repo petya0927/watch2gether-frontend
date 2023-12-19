@@ -13,6 +13,9 @@ import VideoPlayer from '@/components/VideoPlayer';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
+import { isRoomExists } from '@/api/rooms';
+import { Button } from '@mantine/core';
+import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react';
 
 export default function Room({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
@@ -25,15 +28,27 @@ export default function Room({ params }: { params: { id: string } }) {
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
+    const checkRoomExists = async () => {
+      const roomExists = await isRoomExists(params.id);
+      if (!roomExists) {
+        setRoomError(RoomErrors.ROOM_NOT_FOUND);
+
+        // setTimeout(() => {
+        //   window.location.href = '/';
+        // }, 5000);
+      }
+    };
+
+    checkRoomExists();
+  }, [params.id]);
+
+  useEffect(() => {
     if (!username) {
       setRoomError(RoomErrors.USERNAME_EMPTY);
+      return;
     } else {
       setRoomError(null);
     }
-  }, [username]);
-
-  useEffect(() => {
-    if (!username) return;
 
     const socketInstance = initSocket({
       id: params.id,
@@ -81,12 +96,40 @@ export default function Room({ params }: { params: { id: string } }) {
           </div>
         </div>
       )}
-      {roomError && (
-        <UsernameErrorComponent
-          roomId={params.id}
-          setUsername={setUsername}
-          roomError={roomError}
-        />
+      {roomError &&
+        (roomError === RoomErrors.USERNAME_EMPTY ||
+          roomError === RoomErrors.USERNAME_TAKEN) && (
+          <UsernameErrorComponent
+            roomId={params.id}
+            setUsername={setUsername}
+            roomError={roomError}
+          />
+        )}
+      {roomError === RoomErrors.ROOM_NOT_FOUND && (
+        <div className="flex flex-col gap-8 items-center justify-center h-full w-full">
+          <h1 className="font-bold text-white text-4xl text-center">
+            Welcome to Watch2gether!
+          </h1>
+          <p className="text-white text-center max-w-md">
+            The room you are trying to join does not exist. If you think this is
+            a mistake, please contact the room owner.
+          </p>
+          <p className="text-white text-center max-w-md">
+            You will be redirected to home page in 5 seconds.
+          </p>
+          <Button
+            onClick={() => {
+              window.location.href = '/';
+            }}
+            classNames={{
+              root: '!bg-white !text-black',
+              label: 'flex items-center gap-2',
+            }}
+          >
+            <IconArrowLeft size={20} />
+            Go to home page
+          </Button>
+        </div>
       )}
     </>
   );
