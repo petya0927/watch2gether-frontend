@@ -68,12 +68,10 @@ export default function Room({ params }: { params: { id: string } }) {
 
     socketInstance.on('user-joined', (data: User) => {
       onUserJoinedEvent({ setRoom, data });
-      console.log('user joined', data);
     });
 
     socketInstance.on('user-left', (data: User) => {
       onUserLeftEvent({ setRoom, data });
-      console.log('user left', data);
     });
 
     return () => {

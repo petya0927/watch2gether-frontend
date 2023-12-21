@@ -84,17 +84,15 @@ export const onVideoPlay = ({
   reactPlayerRef,
   data,
 }: VideoEventParams) => {
-  console.log('video-play', data);
   setPlayer((prev) => ({
     ...prev,
     isPlaying: true,
     isPlayingFromSocket: true,
   }));
-  reactPlayerRef?.current?.seekTo(data.played);
+  reactPlayerRef?.current?.seekTo(data.played, 'seconds');
 };
 
 export const onVideoPause = ({ setPlayer }: VideoEventParams) => {
-  console.log('video-pause');
   setPlayer((prev) => ({
     ...prev,
     isPlaying: false,
@@ -106,7 +104,6 @@ export const onVideoPlaybackRateChange = ({
   setPlayer,
   data,
 }: VideoEventParams) => {
-  console.log('video-playback-rate-change', data);
   setPlayer((prev) => ({
     ...prev,
     playbackRate: data.playbackRate,
@@ -125,9 +122,10 @@ export const handlePlayerPlay = ({
   setPlayer,
 }: HandlePlayerEventParams) => {
   if (!player?.isPlayingFromSocket) {
-    console.log('handlePlayerPlay');
+    const played = player?.reactPlayerRef?.current?.getCurrentTime().toFixed(2);
+
     socket.emit('video-play', {
-      played: player?.reactPlayerRef?.current?.getCurrentTime(),
+      played: played,
     });
 
     setPlayer((prev) => ({
@@ -147,10 +145,7 @@ export const handlePlayerPause = ({
   setPlayer,
 }: HandlePlayerEventParams) => {
   if (!player?.isPlayingFromSocket) {
-    console.log('handlePlayerPause');
-
     socket.emit('video-pause');
-
     setPlayer((prev) => ({
       ...prev,
       isPlaying: false,
@@ -169,8 +164,6 @@ export const handlePlaybackRateChange = ({
   playbackRate,
 }: HandlePlayerEventParams) => {
   if (player?.playbackRate === playbackRate) return;
-
-  console.log('handlePlaybackRateChange', playbackRate);
 
   socket.emit('video-playback-rate-change', {
     playbackRate: playbackRate,
