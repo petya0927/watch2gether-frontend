@@ -83,12 +83,12 @@ export default function Room({ params }: { params: { id: string } }) {
   }, [params.id, username]);
 
   return (
-    <>
+    <div className="h-full w-full">
       {room && !roomError && username && (
-        <div className="flex flex-col lg:flex-row gap-8 items-center justify-start lg:justify-center h-full w-full">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-start lg:justify-center h-full w-full">
           <VideoPlayer room={room} socket={socket} />
 
-          <div className="flex flex-col gap-8 items-center justify-start lg:justify-center w-full md:w-1/2 lg:w-1/4">
+          <div className="flex flex-col gap-4 w-full md:w-1/3 max-w-2xl">
             <Users room={room} />
             <RoomLink roomLink={window.location.href} />
           </div>
@@ -104,7 +104,7 @@ export default function Room({ params }: { params: { id: string } }) {
           />
         )}
       {roomError === RoomErrors.ROOM_NOT_FOUND && (
-        <div className="flex flex-col gap-8 items-center justify-center h-full w-full">
+        <div className="h-full w-full flex flex-col gap-8 items-center justify-center">
           <h1 className="font-bold text-white text-4xl text-center">
             Welcome to Watch2gether!
           </h1>
@@ -129,6 +129,6 @@ export default function Room({ params }: { params: { id: string } }) {
           </Button>
         </div>
       )}
-    </>
+    </div>
   );
 }

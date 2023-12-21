@@ -105,44 +105,42 @@ const JoinRoomForm = ({ username, formRef }: JoinRoomFormProps) => {
 
   return (
     <form
-      className="flex flex-col gap-8 items-center justify-center w-full"
+      className="flex flex-col gap-4 w-full"
       onSubmit={existingRoomForm.onSubmit(handleJoinRoom)}
     >
-      <div className="flex flex-col gap-2 justify-center items-center w-full">
-        <h3 className="text-white text-xl font-semibold text-center leading-none">
-          Or join an existing room
-        </h3>
-        <div className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center">
-          <TextInput
-            placeholder="Link to existing room"
-            leftSection={<IconLink size={20} />}
-            classNames={{
-              root: 'w-2/3 sm:w-1/2',
-              input: `!bg-transparent border-1 rounded-md ${
-                existingRoomForm.errors.existingRoomUrl
-                  ? 'border-red-500 text-red-500'
-                  : 'border-white text-white'
-              }`,
-            }}
-            {...existingRoomForm.getInputProps('url')}
-          />
-          <Button
-            type="submit"
-            disabled={
-              !!existingRoomForm.errors.url ||
-              !!existingRoomForm.errors.username ||
-              !existingRoomForm.values.url ||
-              !existingRoomForm.values.username
-            }
-            classNames={{
-              root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
-              label: 'flex gap-1 items-center justify-center',
-            }}
-          >
-            Join
-            <IconArrowRight size={16} stroke={2.5} />
-          </Button>
-        </div>
+      <h3 className="text-white text-xl font-semibold text-center leading-none">
+        Or join an existing room
+      </h3>
+      <div className="flex flex-row items-center justify-center gap-2 w-full">
+        <TextInput
+          placeholder="Link to existing room"
+          leftSection={<IconLink size={20} />}
+          classNames={{
+            root: 'w-2/3 sm:w-1/2',
+            input: `!bg-transparent border-1 rounded-md ${
+              existingRoomForm.errors.existingRoomUrl
+                ? 'border-red-500 text-red-500'
+                : 'border-white text-white'
+            }`,
+          }}
+          {...existingRoomForm.getInputProps('url')}
+        />
+        <Button
+          type="submit"
+          disabled={
+            !!existingRoomForm.errors.url ||
+            !!existingRoomForm.errors.username ||
+            !existingRoomForm.values.url ||
+            !existingRoomForm.values.username
+          }
+          classNames={{
+            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
+            label: 'flex gap-1 items-center justify-center',
+          }}
+        >
+          Join
+          <IconArrowRight size={16} stroke={2.5} />
+        </Button>
       </div>
     </form>
   );
