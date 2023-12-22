@@ -3,6 +3,7 @@ import '@mantine/core/styles.css';
 import type { Metadata } from 'next';
 import App from './app';
 import './globals.css';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Watch2gether',
@@ -20,8 +21,9 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="h-screen flex flex-col items-center justify-center p-4 md:p-8 bg-gradient-to-br from-purple-900 to-red-800">
+      <body className="flex flex-col gap-4 items-center justify-center p-4 md:p-8 bg-gradient-to-br from-purple-900 to-red-800">
         <App>{children}</App>
+        <Footer />
       </body>
     </html>
   );

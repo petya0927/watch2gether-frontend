@@ -12,8 +12,8 @@ export default function Home() {
   const existingRoomFormRef = useRef<ExistingRoomFormRef>(null);
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center my-auto">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col items-center justify-center gap-8 h-full">
+      <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="font-bold text-white text-4xl text-center">
           Welcome to Watch2gether!
         </h1>

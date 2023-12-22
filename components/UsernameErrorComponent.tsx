@@ -72,13 +72,17 @@ const UsernameErrorComponent = ({
       </div>
       <form
         onSubmit={form.onSubmit(handleSubmit)}
-        className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center"
+        className="flex flex-row gap-2 justify-center"
       >
         <TextInput
-          placeholder="Choose another username"
+          placeholder={
+            roomError === RoomErrors.USERNAME_TAKEN
+              ? 'Choose another username'
+              : 'Choose a username'
+          }
           leftSection={<IconUser size={20} stroke={2.5} />}
           classNames={{
-            root: 'w-2/3 sm:w-1/2',
+            root: 'w-2/3',
             input: `!bg-transparent border-1 rounded-md ${
               form.errors.username
                 ? 'border-red-500 text-red-500'

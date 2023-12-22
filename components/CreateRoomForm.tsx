@@ -57,50 +57,51 @@ const CreateRoomForm = ({ username, formRef }: CreateRoomFormProps) => {
 
   return (
     <form
-      className="flex flex-col gap-8 items-center justify-center w-full"
+      className="flex flex-col gap-4 w-full"
       onSubmit={createRoomForm.onSubmit(() => {
         createRoomMutation.mutate();
       })}
     >
-      <div className="flex flex-col gap-2 justify-center items-center w-full">
+      <div className="flex flex-col items-center justify-center gap-1">
         <h3 className="text-white text-xl font-semibold text-center leading-none">
           Create a room
         </h3>
         <p className="text-white text-center">
           Paste a YouTube video link below to start
         </p>
-        <div className="flex flex-col sm:flex-row gap-2 w-full items-center justify-center">
-          <TextInput
-            placeholder="YouTube video link"
-            leftSection={<IconBrandYoutube size={20} />}
-            classNames={{
-              root: 'w-2/3 sm:w-1/2',
-              input: `!bg-transparent border-1 rounded-md ${
-                createRoomForm.errors.videoUrl
-                  ? 'border-red-500 text-red-500'
-                  : 'border-white text-white'
-              }`,
-            }}
-            {...createRoomForm.getInputProps('videoUrl')}
-          />
-          <Button
-            type="submit"
-            disabled={
-              !!createRoomForm.errors.videoUrl ||
-              !!createRoomForm.errors.username ||
-              !createRoomForm.values.videoUrl ||
-              !createRoomForm.values.username
-            }
-            loading={createRoomMutation.isPending}
-            classNames={{
-              root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
-              label: 'flex gap-1 items-center justify-center',
-            }}
-          >
-            Create
-            <IconPlus size={16} stroke={2.5} />
-          </Button>
-        </div>
+      </div>
+
+      <div className="flex flex-row items-center justify-center gap-2">
+        <TextInput
+          placeholder="YouTube video link"
+          leftSection={<IconBrandYoutube size={20} />}
+          classNames={{
+            root: 'w-2/3 sm:w-1/2',
+            input: `!bg-transparent border-1 rounded-md ${
+              createRoomForm.errors.videoUrl
+                ? 'border-red-500 text-red-500'
+                : 'border-white text-white'
+            }`,
+          }}
+          {...createRoomForm.getInputProps('videoUrl')}
+        />
+        <Button
+          type="submit"
+          disabled={
+            !!createRoomForm.errors.videoUrl ||
+            !!createRoomForm.errors.username ||
+            !createRoomForm.values.videoUrl ||
+            !createRoomForm.values.username
+          }
+          loading={createRoomMutation.isPending}
+          classNames={{
+            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
+            label: 'flex gap-1 items-center justify-center',
+          }}
+        >
+          Create
+          <IconPlus size={16} stroke={2.5} />
+        </Button>
       </div>
     </form>
   );
