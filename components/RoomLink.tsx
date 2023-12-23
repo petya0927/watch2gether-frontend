@@ -7,7 +7,7 @@ const RoomLink = ({ roomLink }: { roomLink: string }) => {
 
   return (
     <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full shadow-lg">
-      <h2 className="font-bold text-xl">Room link</h2>
+      <h2 className="font-bold text-xl">Share</h2>
       <TextInput
         value={url.href}
         className="w-full"
