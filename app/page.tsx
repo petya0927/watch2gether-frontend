@@ -3,13 +3,11 @@ import CreateRoomForm from '@/components/CreateRoomForm';
 import JoinRoomForm from '@/components/JoinRoomForm';
 import { TextInput } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
-import { useRef, useState } from 'react';
-import { CreateRoomFormRef, ExistingRoomFormRef } from './types';
+import { useState } from 'react';
 
 export default function Home() {
   const [username, setUsername] = useState('');
-  const createRoomFormRef = useRef<CreateRoomFormRef>(null);
-  const existingRoomFormRef = useRef<ExistingRoomFormRef>(null);
+  const [usernameError, setUsernameError] = useState('');
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 h-full">
@@ -29,25 +27,16 @@ export default function Home() {
         classNames={{
           root: 'w-2/3 sm:w-1/2',
           input: `!bg-transparent border-1 rounded-md ${
-            createRoomFormRef.current?.errors.username ||
-            existingRoomFormRef.current?.errors.username
+            usernameError
               ? 'border-red-500 text-red-500'
               : 'border-white text-white'
           }`,
-          section: `${
-            createRoomFormRef.current?.errors.username ||
-            existingRoomFormRef.current?.errors.username
-              ? 'text-red-500'
-              : ''
-          }`,
+          section: `${usernameError ? 'text-red-500' : ''}`,
         }}
-        error={
-          createRoomFormRef.current?.errors.username ||
-          existingRoomFormRef.current?.errors.username
-        }
+        error={usernameError}
       />
-      <CreateRoomForm username={username} formRef={createRoomFormRef} />
-      <JoinRoomForm username={username} formRef={existingRoomFormRef} />
+      <CreateRoomForm username={username} />
+      <JoinRoomForm username={username} setUsernameError={setUsernameError} />
     </div>
   );
 }

@@ -1,22 +1,16 @@
 import { handleIsUsernameTaken, isRoomExists } from '@/api/rooms';
-import { ExistingRoomFormRef } from '@/app/types';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconArrowRight, IconLink } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
-import React, {
-  RefObject,
-  useEffect,
-  useState,
-  useImperativeHandle,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface JoinRoomFormProps {
   username: string;
-  formRef: RefObject<ExistingRoomFormRef>;
+  setUsernameError: Dispatch<SetStateAction<string>>;
 }
 
-const JoinRoomForm = ({ username, formRef }: JoinRoomFormProps) => {
+const JoinRoomForm = ({ username, setUsernameError }: JoinRoomFormProps) => {
   const router = useRouter();
   const [roomExistsError, setRoomExistsError] = useState('');
 
@@ -36,7 +30,7 @@ const JoinRoomForm = ({ username, formRef }: JoinRoomFormProps) => {
         const roomId = url.pathname.split('/')[2];
 
         if (
-          roomId.length !== 16 ||
+          roomId.length !== 24 ||
           !value.includes(window.location.host + '/room/' + roomId)
         ) {
           return 'Please enter a valid room link';
@@ -47,50 +41,52 @@ const JoinRoomForm = ({ username, formRef }: JoinRoomFormProps) => {
     },
   });
 
-  useImperativeHandle(formRef, () => existingRoomForm);
-
   useEffect(() => {
     const roomId = existingRoomForm.values.url
       .trim()
       .split('/')
       .pop() as string;
 
-    const checkUsernameAvailability = async () => {
-      if (existingRoomForm.values.url && username) {
-        const isTaken = await handleIsUsernameTaken({
-          roomId,
-          username,
-        });
+    if (roomId && roomId.length === 24) {
+      const checkUsernameAvailability = async () => {
+        if (existingRoomForm.values.url && username) {
+          const isTaken = await handleIsUsernameTaken({
+            roomId,
+            username,
+          });
 
-        if (isTaken) {
-          existingRoomForm.setFieldError(
-            'username',
-            'Username is already taken in this room'
-          );
-        } else {
-          existingRoomForm.setFieldError('username', '');
+          if (isTaken) {
+            existingRoomForm.setFieldError(
+              'username',
+              'Username is already taken in this room'
+            );
+            setUsernameError('Username is already taken in this room');
+          } else {
+            existingRoomForm.setFieldError('username', '');
+            setUsernameError('');
+          }
         }
-      }
-    };
+      };
 
-    const validateRoomExistence = async () => {
-      const roomId = existingRoomForm.values.url
-        .trim()
-        .split('/')
-        .pop() as string;
+      const validateRoomExistence = async () => {
+        const roomId = existingRoomForm.values.url
+          .trim()
+          .split('/')
+          .pop() as string;
 
-      if (roomId) {
-        const isExists = await isRoomExists(roomId);
-        if (!isExists) {
-          setRoomExistsError('Room does not exist');
-        } else {
-          setRoomExistsError('');
+        if (roomId) {
+          const isExists = await isRoomExists(roomId);
+          if (!isExists) {
+            setRoomExistsError('Room does not exist');
+          } else {
+            setRoomExistsError('');
+          }
         }
-      }
-    };
+      };
 
-    checkUsernameAvailability();
-    validateRoomExistence();
+      checkUsernameAvailability();
+      validateRoomExistence();
+    }
 
     existingRoomForm.setFieldValue('username', username);
   }, [username, existingRoomForm.values.url]);

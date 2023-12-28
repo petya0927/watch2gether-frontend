@@ -1,18 +1,16 @@
 import { createRoom } from '@/api/rooms';
-import { CreateRoomFormRef } from '@/app/types';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconBrandYoutube, IconPlus } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React, { RefObject, useEffect, useImperativeHandle } from 'react';
+import { useEffect } from 'react';
 
 interface CreateRoomFormProps {
   username: string;
-  formRef: RefObject<CreateRoomFormRef>;
 }
 
-const CreateRoomForm = ({ username, formRef }: CreateRoomFormProps) => {
+const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
   const router = useRouter();
 
   const createRoomForm = useForm({
@@ -35,8 +33,6 @@ const CreateRoomForm = ({ username, formRef }: CreateRoomFormProps) => {
       },
     },
   });
-
-  useImperativeHandle(formRef, () => createRoomForm);
 
   useEffect(() => {
     createRoomForm.setFieldValue('username', username);
