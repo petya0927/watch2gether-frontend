@@ -7,6 +7,7 @@ import {
   onUserLeftEvent,
 } from '@/api/socket';
 import { Room, RoomErrors, User } from '@/app/types';
+import Chat from '@/components/Chat';
 import RoomLink from '@/components/RoomLink';
 import UsernameErrorComponent from '@/components/UsernameErrorComponent';
 import Users from '@/components/Users';
@@ -85,13 +86,16 @@ export default function Room({ params }: { params: { id: string } }) {
   return (
     <div className="h-full w-full">
       {room && !roomError && username && (
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-start lg:justify-center h-full w-full">
-          <VideoPlayer room={room} socket={socket} />
+        <div className="h-full w-full flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
+            <VideoPlayer room={room} socket={socket} />
 
-          <div className="flex flex-col gap-4 w-full md:w-1/3 max-w-2xl">
-            <Users room={room} />
-            <RoomLink roomLink={window.location.href} />
+            <div className="flex flex-col gap-4 w-full">
+              <Users room={room} />
+              <RoomLink roomLink={window.location.href} />
+            </div>
           </div>
+          <Chat />
         </div>
       )}
       {roomError &&

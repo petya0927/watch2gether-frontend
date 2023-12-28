@@ -45,7 +45,7 @@ const VideoPlayer = ({ room, socket }: VideoPlayerComponentProps) => {
   }, [socket]);
 
   return (
-    <div className="w-full md:w-2/3 max-w-2xl !aspect-video rounded-2xl overflow-hidden">
+    <div className="w-full !aspect-video rounded-2xl overflow-hidden">
       <ReactPlayer
         className="h-full w-full"
         ref={reactPlayerRef}
