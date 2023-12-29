@@ -73,6 +73,6 @@ export const isRoomExists = async (
     return !!response;
   } catch (error) {
     console.error(error);
-    return true;
+    return undefined;
   }
 };
