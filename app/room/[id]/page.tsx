@@ -6,13 +6,13 @@ import {
   onUserJoinedEvent,
   onUserLeftEvent,
 } from '@/api/socket';
-import { Room, RoomErrors, User } from '@/app/types';
-import Chat from '@/components/Chat';
-import RoomLink from '@/components/RoomLink';
-import RoomNotFound from '@/components/RoomNotFound';
-import UsernameErrorComponent from '@/components/UsernameErrorComponent';
-import Users from '@/components/Users';
-import VideoPlayer from '@/components/VideoPlayer';
+import { Message, Room, RoomErrors, User } from '@/app/types';
+import Chat from '@/components/chat/Chat';
+import RoomLink from '@/components/room/RoomLink';
+import RoomNotFound from '@/components/room/RoomNotFound';
+import UsernameErrorComponent from '@/components/room/UsernameErrorComponent';
+import Users from '@/components/room/Users';
+import VideoPlayer from '@/components/room/VideoPlayer';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
@@ -26,6 +26,17 @@ export default function Room({ params }: { params: { id: string } }) {
   const [room, setRoom] = useState<Room>();
   const [roomError, setRoomError] = useState<RoomErrors | null>(null);
   const [socket, setSocket] = useState<Socket>();
+
+  const addMessage = (message: Message) => {
+    setRoom((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          messages: [...prev.messages, message],
+        };
+      }
+    });
+  };
 
   useEffect(() => {
     const checkRoomExists = async () => {
@@ -63,6 +74,10 @@ export default function Room({ params }: { params: { id: string } }) {
       onRoomDataEvent({ setRoom, data })
     );
 
+    socketInstance.on('message', (message: Message) => {
+      addMessage(message);
+    });
+
     socketInstance.on('user-joined', (data: User) => {
       onUserJoinedEvent({ setRoom, data });
     });
@@ -91,7 +106,11 @@ export default function Room({ params }: { params: { id: string } }) {
               <RoomLink roomLink={window.location.href} />
             </div>
           </div>
-          <Chat />
+          <Chat
+            username={username}
+            messages={room.messages}
+            addMessage={addMessage}
+          />
         </div>
       )}
       {roomError &&

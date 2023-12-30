@@ -1,4 +1,4 @@
-import { Player, Room, User } from '@/app/types';
+import { Message, Player, Room, User } from '@/app/types';
 import { MutableRefObject } from 'react';
 import ReactPlayer from 'react-player';
 import { Socket, io } from 'socket.io-client';
@@ -173,4 +173,21 @@ export const handlePlaybackRateChange = ({
     ...prev,
     playbackRate: playbackRate || 1,
   }));
+};
+
+export const onMessageEvent = ({ setRoom, data }: RoomEventParams<Message>) => {
+  setRoom((prev) => {
+    if (prev) {
+      return {
+        ...prev,
+        messages: [...prev.messages, data],
+      };
+    }
+
+    return prev;
+  });
+};
+
+export const sendMessage = ({ message }: { message: Message }) => {
+  socket.emit('message', message);
 };
