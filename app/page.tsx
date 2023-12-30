@@ -1,6 +1,6 @@
 'use client';
-import CreateRoomForm from '@/components/CreateRoomForm';
-import JoinRoomForm from '@/components/JoinRoomForm';
+import CreateRoomForm from '@/components/roomForms/CreateRoomForm';
+import JoinRoomForm from '@/components/roomForms/JoinRoomForm';
 import { TextInput } from '@mantine/core';
 import { IconUser } from '@tabler/icons-react';
 import { useState } from 'react';

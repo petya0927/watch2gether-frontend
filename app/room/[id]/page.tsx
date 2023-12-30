@@ -95,7 +95,7 @@ export default function Room({ params }: { params: { id: string } }) {
   }, [params.id, username]);
 
   return (
-    <div className="h-full w-full">
+    <>
       {room && !roomError && username && (
         <div className="h-full w-full flex flex-col md:flex-row gap-4">
           <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
@@ -123,6 +123,6 @@ export default function Room({ params }: { params: { id: string } }) {
           />
         )}
       {roomError === RoomErrors.ROOM_NOT_FOUND && <RoomNotFound />}
-    </div>
+    </>
   );
 }

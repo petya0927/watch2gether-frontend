@@ -3,7 +3,7 @@ import packageInfo from '../package.json';
 
 const Footer = () => {
   return (
-    <div className="mt-auto">
+    <div className="mt-auto p-4 flex flex-col gap-1 items-center">
       <p className="text-white">
         By{' '}
         <a
