@@ -41,7 +41,6 @@ export default function Room({ params }: { params: { id: string } }) {
   useEffect(() => {
     const checkRoomExists = async () => {
       const roomExists = await isRoomExists(params.id);
-      console.log(roomExists);
       if (!roomExists) {
         setRoomError(RoomErrors.ROOM_NOT_FOUND);
       }
