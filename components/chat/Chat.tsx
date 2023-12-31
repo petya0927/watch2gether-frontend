@@ -1,5 +1,6 @@
 import { Message } from '@/app/types';
 import ChatInput from './ChatInput';
+import ChatMessage from './ChatMessage';
 
 interface ChatProps {
   messages: Message[];
@@ -12,11 +13,8 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
     <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-[79vh]">
       <h2 className="font-bold text-xl">Chat</h2>
       <div className="flex flex-col gap-2 w-full h-full overflow-y-scroll">
-        {messages.map((message, index) => (
-          <div key={index} className="flex flex-col gap-2">
-            <span className="font-bold">{message.username}</span>
-            <span>{message.message}</span>
-          </div>
+        {messages.map((message) => (
+          <ChatMessage key={message.id} message={message} />
         ))}
       </div>
       <ChatInput addMessage={addMessage} username={username} />
