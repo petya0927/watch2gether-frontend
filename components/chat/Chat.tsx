@@ -18,7 +18,10 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
     const offsetHeight = bottomRef.current?.parentElement?.offsetHeight || 0;
 
     if (scrollHeight - (scrollPosition + offsetHeight) < 100) {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      bottomRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
     }
   }, [messages]);
 
