@@ -13,7 +13,13 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scrollPosition = bottomRef.current?.parentElement?.scrollTop || 0;
+    const scrollHeight = bottomRef.current?.parentElement?.scrollHeight || 0;
+    const offsetHeight = bottomRef.current?.parentElement?.offsetHeight || 0;
+
+    if (scrollHeight - (scrollPosition + offsetHeight) < 100) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages]);
 
   return (
