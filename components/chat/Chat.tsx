@@ -19,7 +19,7 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
 
     if (scrollHeight - (scrollPosition + offsetHeight) < 100) {
       bottomRef.current?.scrollIntoView({
-        behavior: 'smooth',
+        behavior: 'instant',
         block: 'nearest',
       });
     }
@@ -28,7 +28,7 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
   return (
     <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-[79vh]">
       <h2 className="font-bold text-xl">Chat</h2>
-      <div className="flex flex-col gap-2 w-full h-full overflow-y-scroll">
+      <div className="flex flex-col gap-2 w-full h-full overflow-y-auto">
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}

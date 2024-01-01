@@ -24,13 +24,6 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
           return 'Please enter a username';
         }
       },
-      videoUrl: (value) => {
-        if (!value.includes('youtube.com')) {
-          return "We're sorry, but we only support YouTube videos at the moment";
-        } else if (!value.includes('youtube.com/watch?v=')) {
-          return 'Please enter a valid YouTube video link';
-        }
-      },
     },
   });
 
