@@ -1,18 +1,16 @@
 import { createRoom } from '@/api/rooms';
-import { CreateRoomFormRef } from '@/app/types';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconBrandYoutube, IconPlus } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import React, { RefObject, useEffect, useImperativeHandle } from 'react';
+import { useEffect } from 'react';
 
 interface CreateRoomFormProps {
   username: string;
-  formRef: RefObject<CreateRoomFormRef>;
 }
 
-const CreateRoomForm = ({ username, formRef }: CreateRoomFormProps) => {
+const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
   const router = useRouter();
 
   const createRoomForm = useForm({
@@ -26,17 +24,8 @@ const CreateRoomForm = ({ username, formRef }: CreateRoomFormProps) => {
           return 'Please enter a username';
         }
       },
-      videoUrl: (value) => {
-        if (!value.includes('youtube.com')) {
-          return "We're sorry, but we only support YouTube videos at the moment";
-        } else if (!value.includes('youtube.com/watch?v=')) {
-          return 'Please enter a valid YouTube video link';
-        }
-      },
     },
   });
-
-  useImperativeHandle(formRef, () => createRoomForm);
 
   useEffect(() => {
     createRoomForm.setFieldValue('username', username);

@@ -6,13 +6,14 @@ import {
   onUserJoinedEvent,
   onUserLeftEvent,
 } from '@/api/socket';
-import { Room, RoomErrors, User } from '@/app/types';
-import RoomLink from '@/components/RoomLink';
-import UsernameErrorComponent from '@/components/UsernameErrorComponent';
-import Users from '@/components/Users';
-import VideoPlayer from '@/components/VideoPlayer';
-import { Button } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons-react';
+import { Message, Room, RoomErrors, User } from '@/app/types';
+import Chat from '@/components/chat/Chat';
+import RoomLink from '@/components/room/RoomLink';
+import RoomNotFound from '@/components/room/RoomNotFound';
+import UsernameErrorComponent from '@/components/room/UsernameErrorComponent';
+import Users from '@/components/room/Users';
+import VideoPlayer from '@/components/room/VideoPlayer';
+import { Skeleton } from '@mantine/core';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
@@ -27,15 +28,22 @@ export default function Room({ params }: { params: { id: string } }) {
   const [roomError, setRoomError] = useState<RoomErrors | null>(null);
   const [socket, setSocket] = useState<Socket>();
 
+  const addMessage = (message: Message) => {
+    setRoom((prev) => {
+      if (prev) {
+        return {
+          ...prev,
+          messages: [...prev.messages, message],
+        };
+      }
+    });
+  };
+
   useEffect(() => {
     const checkRoomExists = async () => {
       const roomExists = await isRoomExists(params.id);
       if (!roomExists) {
         setRoomError(RoomErrors.ROOM_NOT_FOUND);
-
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 5000);
       }
     };
 
@@ -66,6 +74,10 @@ export default function Room({ params }: { params: { id: string } }) {
       onRoomDataEvent({ setRoom, data })
     );
 
+    socketInstance.on('message', (message: Message) => {
+      addMessage(message);
+    });
+
     socketInstance.on('user-joined', (data: User) => {
       onUserJoinedEvent({ setRoom, data });
     });
@@ -83,15 +95,22 @@ export default function Room({ params }: { params: { id: string } }) {
   }, [params.id, username]);
 
   return (
-    <div className="h-full w-full">
+    <>
       {room && !roomError && username && (
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-start lg:justify-center h-full w-full">
-          <VideoPlayer room={room} socket={socket} />
+        <div className="w-full flex flex-col md:flex-row gap-4">
+          <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
+            <VideoPlayer room={room} socket={socket} />
 
-          <div className="flex flex-col gap-4 w-full md:w-1/3 max-w-2xl">
-            <Users room={room} />
-            <RoomLink roomLink={window.location.href} />
+            <div className="flex flex-col gap-4 w-full">
+              <Users room={room} />
+              <RoomLink roomLink={window.location.href} />
+            </div>
           </div>
+          <Chat
+            username={username}
+            messages={room.messages}
+            addMessage={addMessage}
+          />
         </div>
       )}
       {roomError &&
@@ -103,32 +122,7 @@ export default function Room({ params }: { params: { id: string } }) {
             roomError={roomError}
           />
         )}
-      {roomError === RoomErrors.ROOM_NOT_FOUND && (
-        <div className="h-full w-full flex flex-col gap-8 items-center justify-center">
-          <h1 className="font-bold text-white text-4xl text-center">
-            Welcome to Watch2gether!
-          </h1>
-          <p className="text-white text-center max-w-md">
-            The room you are trying to join does not exist. If you think this is
-            a mistake, please contact the room owner.
-          </p>
-          <p className="text-white text-center max-w-md">
-            You will be redirected to home page in 5 seconds.
-          </p>
-          <Button
-            onClick={() => {
-              window.location.href = '/';
-            }}
-            classNames={{
-              root: '!bg-white !text-black',
-              label: 'flex items-center gap-2',
-            }}
-          >
-            <IconArrowLeft size={20} />
-            Go to home page
-          </Button>
-        </div>
-      )}
-    </div>
+      {roomError === RoomErrors.ROOM_NOT_FOUND && <RoomNotFound />}
+    </>
   );
 }

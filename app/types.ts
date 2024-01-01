@@ -1,6 +1,5 @@
 import ReactPlayer from 'react-player';
 import { MutableRefObject } from 'react';
-import { UseFormReturnType } from '@mantine/form';
 
 export interface AppContextType {
   username: string;
@@ -12,6 +11,7 @@ export interface Room {
   videoUrl: string;
   owner: string;
   users: User[];
+  messages: Message[];
   createdAt?: string;
 }
 
@@ -33,18 +33,9 @@ export interface Player {
   reactPlayerRef?: MutableRefObject<ReactPlayer | null>;
 }
 
-export type FormRef<T> = UseFormReturnType<T, (values: T) => T>;
-
-export interface ExistingRoomFormValues {
+export interface Message {
+  id: string;
   username: string;
-  url: string;
+  message: string;
+  createdAt: string;
 }
-
-export interface CreateRoomFormValues {
-  username: string;
-  videoUrl: string;
-}
-
-export type ExistingRoomFormRef = FormRef<ExistingRoomFormValues>;
-
-export type CreateRoomFormRef = FormRef<CreateRoomFormValues>;

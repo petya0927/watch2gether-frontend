@@ -65,12 +65,14 @@ export const handleIsUsernameTaken = async ({
   return isTaken;
 };
 
-export const isRoomExists = async (roomId: string): Promise<boolean> => {
+export const isRoomExists = async (
+  roomId: string
+): Promise<boolean | undefined> => {
   try {
     const response = await getRoom(roomId);
     return !!response;
   } catch (error) {
     console.error(error);
-    return false;
+    return undefined;
   }
 };
