@@ -7,11 +7,11 @@ import React from 'react';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   return (
-    <div className="w-full md:h-full flex flex-col gap-4">
+    <>
       <div>
         <Button
           classNames={{
-            root: '!bg-white !text-black rounded-md self-start',
+            root: '!bg-white !text-black rounded-md',
             label: 'flex gap-1 items-center justify-center',
           }}
           onClick={() => router.push('/')}
@@ -21,7 +21,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Button>
       </div>
       {children}
-    </div>
+    </>
   );
 };
 

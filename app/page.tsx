@@ -10,7 +10,7 @@ export default function Home() {
   const [usernameError, setUsernameError] = useState('');
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 h-full">
+    <div className="flex flex-col items-center justify-center gap-8 h-full max-w-2xl mx-auto p-4">
       <div className="flex flex-col items-center justify-center gap-2">
         <h1 className="font-bold text-white text-4xl text-center">
           Welcome to Watch2gether!
@@ -25,7 +25,7 @@ export default function Home() {
         value={username}
         onChange={(event) => setUsername(event.currentTarget.value)}
         classNames={{
-          root: 'w-2/3 sm:w-1/2',
+          root: 'w-full sm:w-1/2',
           input: `!bg-transparent border-1 rounded-md ${
             usernameError
               ? 'border-red-500 text-red-500'

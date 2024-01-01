@@ -13,6 +13,7 @@ import RoomNotFound from '@/components/room/RoomNotFound';
 import UsernameErrorComponent from '@/components/room/UsernameErrorComponent';
 import Users from '@/components/room/Users';
 import VideoPlayer from '@/components/room/VideoPlayer';
+import { Skeleton } from '@mantine/core';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
@@ -96,7 +97,7 @@ export default function Room({ params }: { params: { id: string } }) {
   return (
     <>
       {room && !roomError && username && (
-        <div className="h-full w-full flex flex-col md:flex-row gap-4">
+        <div className="w-full flex flex-col md:flex-row gap-4">
           <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
             <VideoPlayer room={room} socket={socket} />
 

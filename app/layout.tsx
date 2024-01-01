@@ -21,7 +21,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="flex flex-col gap-4 items-center justify-between p-4 md:p-8 bg-gradient-to-br from-purple-900 to-red-800">
+      <body className="flex flex-col gap-4 justify-between p-4 md:p-8 max-w-[1440px] mx-auto mt-auto max-h-[1000px] bg-gray-900">
         <App>{children}</App>
         <Footer />
       </body>
