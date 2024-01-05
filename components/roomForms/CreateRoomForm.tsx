@@ -1,10 +1,12 @@
 import { createRoom } from '@/api/rooms';
+import { isValidUrl } from '@/utils/helperFunctions';
 import { Button, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconBrandYoutube, IconPlus } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import ReactPlayer from 'react-player';
 
 interface CreateRoomFormProps {
   username: string;
@@ -22,6 +24,13 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
       username: (value) => {
         if (!value) {
           return 'Please enter a username';
+        }
+      },
+      videoUrl: (value) => {
+        if (!isValidUrl(value)) {
+          return 'Please enter a valid link';
+        } else if (!ReactPlayer.canPlay(value)) {
+          return "We don't support this video link, please try another one";
         }
       },
     },
