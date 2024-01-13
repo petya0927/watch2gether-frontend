@@ -26,20 +26,22 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
   }, [messages]);
 
   return (
-    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-none">
+    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-fit">
       <h2 className="font-bold text-xl">Chat</h2>
-      {messages.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 w-full h-full">
-          <p className="text-gray-500 text-center">
-            No messages yet. Be the first to send one!
-          </p>
+      <div className="h-full w-full overflow-y-auto">
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-2 w-full h-full">
+            <p className="text-gray-500 text-center">
+              No messages yet. Be the first to send one!
+            </p>
+          </div>
+        )}
+        <div className="flex flex-col gap-2 w-full overflow-y-auto">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          <div ref={bottomRef} />
         </div>
-      )}
-      <div className="flex flex-col gap-2 w-full overflow-y-auto">
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
-        <div ref={bottomRef} />
       </div>
       <ChatInput addMessage={addMessage} username={username} />
     </div>
