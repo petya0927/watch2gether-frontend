@@ -96,6 +96,12 @@ export default function Room({ params }: { params: { id: string } }) {
 
   return (
     <>
+      {!room && !roomError && (
+        <div className="w-full h-full flex items-center justify-center">
+          <Loader color="white" size="lg" />
+        </div>
+      )}
+
       {room && !roomError && username && (
         <div className="w-full flex flex-col md:flex-row gap-4">
           <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
