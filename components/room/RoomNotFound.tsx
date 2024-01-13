@@ -36,12 +36,15 @@ const RoomNotFound = () => {
         You will be redirected to home page in {counter} seconds.
       </p>
       <Button
+        variant="white"
+        type="submit"
+        color="dark"
         onClick={() => {
           router.push('/');
         }}
         classNames={{
-          root: '!bg-white !text-black',
-          label: 'flex items-center gap-2',
+          root: 'w-auto rounded-md',
+          label: 'flex gap-1 items-center justify-center',
         }}
       >
         <IconArrowLeft size={20} />

@@ -84,7 +84,9 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
           {...createRoomForm.getInputProps('videoUrl')}
         />
         <Button
+          variant="white"
           type="submit"
+          color="dark"
           disabled={
             !!createRoomForm.errors.videoUrl ||
             !!createRoomForm.errors.username ||
@@ -93,7 +95,7 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
           }
           loading={createRoomMutation.isPending}
           classNames={{
-            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
+            root: 'w-auto rounded-md sm:self-start disabled:opacity-50',
             label: 'flex gap-1 items-center justify-center',
           }}
         >

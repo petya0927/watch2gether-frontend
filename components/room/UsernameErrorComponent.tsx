@@ -95,11 +95,11 @@ const UsernameErrorComponent = ({
         />
         <Button
           variant="white"
-          color="black"
           type="submit"
+          color="dark"
           disabled={!!form.errors.username || !form.values.username}
           classNames={{
-            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
+            root: 'w-auto rounded-md sm:self-start disabled:opacity-50',
             label: 'flex gap-1 items-center justify-center',
           }}
         >

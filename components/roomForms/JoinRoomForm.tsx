@@ -136,7 +136,9 @@ const JoinRoomForm = ({ username, setUsernameError }: JoinRoomFormProps) => {
           {...existingRoomForm.getInputProps('url')}
         />
         <Button
+          variant="white"
           type="submit"
+          color="dark"
           disabled={
             !!existingRoomForm.errors.url ||
             !!existingRoomForm.errors.username ||
@@ -144,7 +146,7 @@ const JoinRoomForm = ({ username, setUsernameError }: JoinRoomFormProps) => {
             !existingRoomForm.values.username
           }
           classNames={{
-            root: 'w-auto rounded-md sm:self-start !bg-white !text-black disabled:opacity-50 disabled:text-gray-400',
+            root: 'w-auto rounded-md sm:self-start disabled:opacity-50',
             label: 'flex gap-1 items-center justify-center',
           }}
         >
