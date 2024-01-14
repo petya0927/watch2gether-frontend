@@ -20,7 +20,7 @@ export default function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="bg-gradient-to-br from-rose-900 to-purple-800 bg-no-repeat bg-fixed">
+      <body className="bg-gradient-to-br from-red-900 to-purple-950 bg-no-repeat bg-fixed">
         <App>{children}</App>
       </body>
     </html>
