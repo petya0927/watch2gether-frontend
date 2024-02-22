@@ -2,14 +2,16 @@ import { Message } from '@/app/types';
 import ChatInput from './ChatInput';
 import ChatMessage from './ChatMessage';
 import { useEffect, useRef } from 'react';
+import { IconUser } from '@tabler/icons-react';
 
 interface ChatProps {
   messages: Message[];
   addMessage: (message: Message) => void;
   username: string;
+  userCount: number;
 }
 
-const Chat = ({ messages, addMessage, username }: ChatProps) => {
+const Chat = ({ messages, addMessage, username, userCount }: ChatProps) => {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,8 +28,14 @@ const Chat = ({ messages, addMessage, username }: ChatProps) => {
   }, [messages]);
 
   return (
-    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-fit">
-      <h2 className="font-bold text-xl">Chat</h2>
+    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-[500px]">
+      <div className="flex flex-row justify-between gap-4 w-full">
+        <h2 className="font-bold text-xl">Chat</h2>
+        <div className="flex flex-row gap-2 items-center">
+          <IconUser size={18} />
+          <p>{userCount}</p>
+        </div>
+      </div>
       <div className="h-full w-full overflow-y-auto">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center gap-2 w-full h-full">

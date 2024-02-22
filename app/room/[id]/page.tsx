@@ -104,18 +104,14 @@ export default function Room({ params }: { params: { id: string } }) {
 
       {room && !roomError && username && (
         <div className="w-full flex flex-col md:flex-row gap-4 h-min md:max-h-[700px] 2xl:max-h-[1000px]">
-          <div className="flex flex-col gap-4 items-center w-full md:w-2/3 h-full">
+          <div className="flex flex-col gap-4 items-center justify-center w-full md:w-2/3 h-full">
             <VideoPlayer room={room} socket={socket} />
-
-            <div className="flex flex-col gap-4 w-full flex-grow">
-              <Users room={room} />
-              <RoomLink roomLink={window.location.href} />
-            </div>
           </div>
           <Chat
             username={username}
             messages={room.messages}
             addMessage={addMessage}
+            userCount={room.users.length}
           />
         </div>
       )}

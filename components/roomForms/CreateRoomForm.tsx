@@ -51,6 +51,12 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
         `/room/${data.id}?username=${createRoomForm.values.username}`
       );
     },
+    onError: (error) => {
+      createRoomForm.setFieldError(
+        'videoUrl',
+        'Error creating room, please try again later.'
+      );
+    },
   });
 
   return (
