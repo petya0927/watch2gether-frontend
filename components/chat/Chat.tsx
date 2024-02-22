@@ -28,7 +28,7 @@ const Chat = ({ messages, addMessage, username, userCount }: ChatProps) => {
   }, [messages]);
 
   return (
-    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-full max-h-96 md:max-h-[500px]">
+    <div className="bg-white flex flex-col gap-2 items-start rounded-2xl p-4 w-full md:w-1/3 shadow-lg h-96 md:h-[500px]">
       <div className="flex flex-row justify-between gap-4 w-full">
         <h2 className="font-bold text-xl">Chat</h2>
         <div className="flex flex-row gap-2 items-center">
