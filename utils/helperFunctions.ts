@@ -11,6 +11,10 @@ export const isValidUrl = (url: string) => {
     return false;
   }
 
-  const domainExtensionRegex = /\.[a-z]{2,}/i;
-  return domainExtensionRegex.test(url);
+  if (!url.includes('localhost')) {
+    const domainExtensionRegex = /\.[a-z]{2,}/i;
+    return domainExtensionRegex.test(url);
+  } else {
+    return true;
+  }
 };
