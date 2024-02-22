@@ -103,7 +103,7 @@ export default function Room({ params }: { params: { id: string } }) {
       )}
 
       {room && !roomError && username && (
-        <div className="w-full flex flex-col md:flex-row gap-4 h-min md:max-h-[700px] 2xl:max-h-[1000px]">
+        <div className="w-full flex flex-col md:flex-row items-center gap-4 h-min md:max-h-[700px] 2xl:max-h-[1000px]">
           <div className="flex flex-col gap-4 items-center justify-center w-full md:w-2/3">
             <VideoPlayer room={room} socket={socket} />
           </div>
