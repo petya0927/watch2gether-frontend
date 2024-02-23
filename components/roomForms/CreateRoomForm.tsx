@@ -101,7 +101,7 @@ const CreateRoomForm = ({ username }: CreateRoomFormProps) => {
           }
           loading={createRoomMutation.isPending}
           classNames={{
-            root: 'w-auto rounded-md sm:self-start disabled:opacity-50',
+            root: 'w-auto rounded-md sm:self-start disabled:opacity-50 bg-white',
             label: 'flex gap-1 items-center justify-center',
           }}
         >
