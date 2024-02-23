@@ -146,7 +146,7 @@ const JoinRoomForm = ({ username, setUsernameError }: JoinRoomFormProps) => {
             !existingRoomForm.values.username
           }
           classNames={{
-            root: 'w-auto rounded-md sm:self-start disabled:opacity-50 bg-white disabled:bg-opacity-70',
+            root: 'w-auto rounded-md sm:self-start disabled:opacity-50',
             label: 'flex gap-1 items-center justify-center',
           }}
         >
